@@ -1,8 +1,19 @@
 <?php 
+// require_once "./base.php";
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
+define('BASE_URL', 'http://localhost:8000/');
+
+function base_url($path = '') {
+    return BASE_URL . ltrim($path, '/');
+}
 function select($conn,$sql)  {
     $query = "$sql";
-    return $conn->query($query)->execute();
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll();
 }
 
 function protectSelect($conn,$sql,$param,$one){

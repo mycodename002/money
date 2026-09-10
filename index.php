@@ -7,6 +7,7 @@
   <!-- DaisyUI v5 & Tailwind CSS v4 CDN -->
   <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-base-200 min-h-screen flex flex-col">
 
@@ -51,6 +52,25 @@
       </form>
     </div>
   </div>
+<?php 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if(isset($_SESSION['alarm'])){
+  if(!empty($_SESSION['alarm'])){ ?>
+   <script> Swal.fire({
+  icon: "error",
+  title: "<?php echo $_SESSION['alarm'] ?>",
+  showConfirmButton: false,
+  timer: 1500
+  
+});
+</script>
+  <?php }
+} 
+unset($_SESSION['alarm']);
+?>
 
 </body>
 </html>
