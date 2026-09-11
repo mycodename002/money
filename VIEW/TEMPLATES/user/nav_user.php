@@ -6,15 +6,17 @@
         <div class="flex-none">
             <ul class="menu menu-horizontal px-1">
                 <li><a>Link</a></li>
-                <li>
-                    <details>
-                        <summary>Parent</summary>
-                        <ul class="bg-base-100 rounded-t-none p-2">
-                            <li><a>Link 1</a></li>
-                            <li><a>Link 2</a></li>
-                        </ul>
-                    </details>
-                </li>
+                <?php ?>
+                    <li>
+                        <details>
+                            <summary>จัดการสมาชิก</summary>
+                            <ul class="bg-base-100 rounded-t-none p-2">
+                                <li onclick="insert_user.showModal()"><a >เพิ่มสมาชิก</a></li>
+                                <li><a>Link 2</a></li>
+                            </ul>
+                        </details>
+                    </li>
+                <?php ?>
             </ul>
         </div>
     </div>

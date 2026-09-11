@@ -23,4 +23,18 @@ function protectSelect($conn,$sql,$param,$one){
     else $data = $stmt->fetch();
     return $data;
 }  
+
+function insert($conn, $sql) {
+    $conn->exec($sql);
+}
+
+function backPage() {
+    echo '<script type="text/javascript">
+    if (document.referrer) {
+        window.location.href = document.referrer;
+    } else {
+        window.history.back();
+    }
+    </script>';
+}
 ?>

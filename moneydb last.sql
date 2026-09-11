@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 10, 2026 at 08:24 AM
+-- Generation Time: Sep 11, 2026 at 07:21 AM
 -- Server version: 12.3.3-MariaDB
 -- PHP Version: 8.0.30
 
@@ -39,27 +39,66 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`id`, `titel`, `details`, `is_deleted`) VALUES
-(1, 'สัมมนาประจำปี 2567', 'สัมมนาวิชาการและการอบรมเชิงปฏิบัติการ', 0),
+(1, 'เก็บตังค์โว้ย 2', '', 0),
 (2, 'กิจกรรมจิตอาสาปลูกป่า', 'ร่วมกันปลูกป่าชายเลนและเก็บขยะชายหาด', 0),
-(3, 'งานเลี้ยงปีใหม่บริษัท', 'งานเลี้ยงสังสรรค์และจับฉลากของขวัญ', 0);
+(3, 'เก็บตังค์โว้ยย 3', 'อาทิตย์อะไรวะ', 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `group_admin`
+-- Table structure for table `groups`
 --
 
-CREATE TABLE `group_admin` (
+CREATE TABLE `groups` (
+  `id` int(11) NOT NULL,
+  `groupname` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `groups`
+--
+
+INSERT INTO `groups` (`id`, `groupname`) VALUES
+(1, 'ป.ตรี 4ปี '),
+(2, 'ป.ตรี เทียบโอน');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `group_admins`
+--
+
+CREATE TABLE `group_admins` (
   `id` int(11) NOT NULL,
   `id_admin` int(11) NOT NULL,
+  `id_group` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `group_admins`
+--
+
+INSERT INTO `group_admins` (`id`, `id_admin`, `id_group`) VALUES
+(1, 1, 1),
+(2, 21, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `group_admin_event`
+--
+
+CREATE TABLE `group_admin_event` (
+  `id` int(11) NOT NULL,
+  `id_group_admin` int(11) NOT NULL,
   `id_event` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `group_admin`
+-- Dumping data for table `group_admin_event`
 --
 
-INSERT INTO `group_admin` (`id`, `id_admin`, `id_event`) VALUES
+INSERT INTO `group_admin_event` (`id`, `id_group_admin`, `id_event`) VALUES
 (1, 1, 1),
 (2, 2, 2),
 (3, 1, 3);
@@ -97,7 +136,7 @@ CREATE TABLE `members` (
   `fname` varchar(50) NOT NULL,
   `lname` varchar(50) NOT NULL,
   `user` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
+  `pass` varchar(255) NOT NULL,
   `rule` enum('support','admin','user') NOT NULL,
   `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -106,8 +145,8 @@ CREATE TABLE `members` (
 -- Dumping data for table `members`
 --
 
-INSERT INTO `members` (`id`, `fname`, `lname`, `user`, `password`, `rule`, `is_deleted`) VALUES
-(1, 'สมชาย', 'ชาย', 'somchai', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'admin', 0),
+INSERT INTO `members` (`id`, `fname`, `lname`, `user`, `pass`, `rule`, `is_deleted`) VALUES
+(1, 'สมชาย', 'ชาย', 'somchai', '$2y$10$T8ZCb1zLsMor7wcfDVGwoOEg57MLgFcJRc/6mJDZrdMwhXVvXiLCG', 'admin', 0),
 (2, 'วิภา', 'ภา', 'wipha', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'support', 0),
 (3, 'กิตติ', 'ตติ', 'kitti', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0),
 (4, 'นภา', 'ภา', 'napha', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0),
@@ -126,7 +165,10 @@ INSERT INTO `members` (`id`, `fname`, `lname`, `user`, `password`, `rule`, `is_d
 (17, 'วรินทร', 'ริน', 'warinthorn', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0),
 (18, 'ศุภโชค', 'โชค', 'suphachok', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0),
 (19, 'อริสา', 'ริสา', 'arisa', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0),
-(20, 'เอกชัย', 'เอก', 'ekachai', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0);
+(20, 'เอกชัย', 'เอก', 'ekachai', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0),
+(21, 'วรัญชัย', 'วิใจคำ', 'om', '$2y$10$T8ZCb1zLsMor7wcfDVGwoOEg57MLgFcJRc/6mJDZrdMwhXVvXiLCG', 'admin', 0),
+(23, 'วรัญชัย', 'วิใจคำ', 'om1', '$2y$10$xshylO5kwAXDZr6DomyYh.syazka1lJGtWJOOX90/yUoRGjQ31kJu', 'user', 0),
+(25, 'วรัชยา', 'ค้าคล่อง', 'nam', '$2y$10$F/TSbDymWXvQ5NGHXrvLMe/NAO/VHBXac8Kud47OFLXGLEPk3AanK', 'admin', 0);
 
 -- --------------------------------------------------------
 
@@ -216,11 +258,23 @@ ALTER TABLE `events`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `group_admin`
+-- Indexes for table `groups`
 --
-ALTER TABLE `group_admin`
+ALTER TABLE `groups`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `group_admins`
+--
+ALTER TABLE `group_admins`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `group_admin_event`
+--
+ALTER TABLE `group_admin_event`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_group_admin_members` (`id_admin`),
+  ADD KEY `fk_group_admin_members` (`id_group_admin`),
   ADD KEY `fk_group_admin_events` (`id_event`);
 
 --
@@ -264,9 +318,21 @@ ALTER TABLE `events`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `group_admin`
+-- AUTO_INCREMENT for table `groups`
 --
-ALTER TABLE `group_admin`
+ALTER TABLE `groups`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `group_admins`
+--
+ALTER TABLE `group_admins`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `group_admin_event`
+--
+ALTER TABLE `group_admin_event`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
@@ -279,7 +345,7 @@ ALTER TABLE `group_mem`
 -- AUTO_INCREMENT for table `members`
 --
 ALTER TABLE `members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `mem_event`
@@ -298,17 +364,17 @@ ALTER TABLE `slips`
 --
 
 --
--- Constraints for table `group_admin`
+-- Constraints for table `group_admin_event`
 --
-ALTER TABLE `group_admin`
+ALTER TABLE `group_admin_event`
   ADD CONSTRAINT `fk_group_admin_events` FOREIGN KEY (`id_event`) REFERENCES `events` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_group_admin_members` FOREIGN KEY (`id_admin`) REFERENCES `members` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_group_admin_members` FOREIGN KEY (`id_group_admin`) REFERENCES `members` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `group_mem`
 --
 ALTER TABLE `group_mem`
-  ADD CONSTRAINT `fk_group_mem_group_admin` FOREIGN KEY (`id_group_admin`) REFERENCES `group_admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_group_mem_group_admin` FOREIGN KEY (`id_group_admin`) REFERENCES `group_admin_event` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `mem_event`

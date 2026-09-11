@@ -52,25 +52,7 @@
       </form>
     </div>
   </div>
-<?php 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-if(isset($_SESSION['alarm'])){
-  if(!empty($_SESSION['alarm'])){ ?>
-   <script> Swal.fire({
-  icon: "error",
-  title: "<?php echo $_SESSION['alarm'] ?>",
-  showConfirmButton: false,
-  timer: 1500
-  
-});
-</script>
-  <?php }
-} 
-unset($_SESSION['alarm']);
-?>
+<?php require_once "./API/alarmAndNotify.php" ?>
 
 </body>
 </html>
