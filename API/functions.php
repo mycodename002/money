@@ -24,6 +24,17 @@ function protectSelect($conn,$sql,$param,$one){
     return $data;
 }  
 
+function delete($conn, $sql, $param){
+    $tempSQL = $conn->prepare($sql);
+    $tempSQL->execute($param);
+    // $conn->exec($sql);
+}
+
+function update($conn, $sql, $param){
+    $tempSQL = $conn->prepare($sql);
+    $tempSQL->execute($param);
+    // $conn->exec($sql);
+}
 function insert($conn, $sql) {
     $conn->exec($sql);
 }

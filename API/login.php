@@ -8,7 +8,7 @@ $pass = $_POST['pass'];
 // $data = select($conn, ";");
 // $data = $data->fetch();
 // print_r($data);
-$sql = "SELECT rule,id, fname, lname, pass FROM `members` WHERE user = :user and is_deleted = 0";
+$sql = "SELECT rule,id, fname, lname, pass, admin_group FROM `members` WHERE user = :user and is_deleted = 0";
 $data = protectSelect($conn, $sql,['user'=>$user] ,!true);
 if(empty($data)){
     $_SESSION["alarm"] = "ชื่อผู้ใช้งานไม่ถูกต้อง";
@@ -27,6 +27,8 @@ $_SESSION['auth']['fname'] = $data['fname'];
 $_SESSION['auth']['lname'] = $data['lname'];
 $_SESSION['auth']['rule'] = $data['rule'];
 if($data['rule'] == 'admin'){
+    $_SESSION['auth']['admin_group'] = $data['admin_group'];
+
     header("Location:".base_url('/VIEW/ADMIN'));
     exit();
 }
