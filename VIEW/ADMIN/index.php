@@ -9,8 +9,11 @@ if(!($_SESSION['auth']['rule'] == 'admin')) {header(base_url('index.php')); exit
 
 <?php 
 
-$admin_id = $_SESSION['auth']['id'];
-$datas = select($conn,"SELECT * FROM `group_admin_event`AS g JOIN `events` AS e ON e.id = g.id_event WHERE id_group_admin = (SELECT id_group FROM group_admins WHERE id_admin = $admin_id LIMIT 1) AND e.is_deleted = 0;")
+
+$admin_group = $_SESSION['auth']['admin_group']; 
+$sql = "SELECT e.id, e.titel, e.details  FROM `group_admin_event` AS g JOIN `events` AS e ON g.id_event = e.id WHERE g.id_group_admin = $admin_group AND e.is_deleted = 0 AND e.is_success = 0 ;";
+
+$datas = select($conn,$sql);
 
 ?>
 <div class="container mx-auto px-4 mt-4">
