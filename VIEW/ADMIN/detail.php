@@ -33,9 +33,11 @@ $start = ($page-1)*25;
 $sql = "SELECT m.id, m.fname, m.lname FROM `mem_event`AS e JOIN `members` as m ON e.id_mem = m.id WHERE e.id_event = $id AND m.is_deleted = 0 LIMIT $start,25;";
 $data = select($conn,$sql);
 ?>
+<?php $data_event = protectSelect($conn,"SELECT titel, details FROM `events` WHERE id = :id_event;",["id_event"=>$id],0) ?>
 <div class="container mx-auto px-4 mt-4">
     <div class="overflow-x-auto">
-        <h2 class="text-xl font-bold mb-4">รายชื่อผู้ใช้</h2>
+        <h2 class="text-xl font-bold mb-4">รายชื่อผู้ใช้ใน <?php echo $data_event['titel'] ?> </h2>
+        <p><?php echo $data_event['details'] ?></p>
         <button class = "btn btn-soft btn-primary" onclick="Modal_add_member.showModal()">เพิ่มสมาชิก</button>
         <table class="table w-full">
             <!-- head -->
@@ -104,7 +106,7 @@ $data = select($conn,$sql);
     <div class="modal-box">
         <h3 class="font-bold text-lg text-primary mb-4">เพิ่มสมาชิกเข้าร่วมรายการ</h3>
         
-        <?php $data_group = protectSelect($conn, "SELECT DISTINCT g.id, g.titel FROM `base_group_member` AS b JOIN `group_mem` AS g ON b.id_name_group = g.id WHERE b.id_group_admin = :ad_id;", ["ad_id"=>$ad_id], 1) ?>
+        <?php $data_group = protectSelect($conn, "SELECT DISTINCT g.id, g.titel FROM `base_group_member` AS b JOIN `group_mem` AS g ON b.id_name_group = g.id WHERE g.id_group_admin = :ad_id;", ["ad_id"=>$ad_id], 1) ?>
         
         <!-- 1. เลือกกลุ่มสมาชิก -->
         <div class="form-control mb-4">
@@ -154,7 +156,10 @@ function fetchMembersByGroup(groupId) {
     const selectAllContainer = document.getElementById('select_all_container');
     const submitBtn = document.getElementById('btn_submit_members');
     const countSpan = document.getElementById('member_count');
+    const id_event = <?php echo $id; ?>
 
+    console.error(id_event);
+    console.error(groupId);
     if (!groupId) return;
 
     // รีเซ็ตการแสดงผล
@@ -164,7 +169,7 @@ function fetchMembersByGroup(groupId) {
     submitBtn.classList.add('hidden');
 
     // ดึงข้อมูลผ่าน AJAX
-    fetch(`../../API/admin/getMembersByGroup.php?group_id=${groupId}`)
+    fetch(`../../API/admin/getMembersByGroup.php?group_id=${groupId}&id_event=${id_event}`)
         .then(response => response.json())
         .then(data => {
             if (data.length === 0) {
@@ -277,3 +282,15 @@ function submitEditForm() {
     }
 }
 </script>
+
+<!-- 
+SELECT * FROM `members` AS m JOIN `base_group_member` AS b ON m.id = b.id_mem WHERE NOT EXISTS(
+    SELECT id FROM `mem_event` AS me WHERE m.id = me.id_mem
+) AND b.id_name_group = 1; -->
+
+<!-- แยม
+33
+รับพิชิต
+แม่วะหลวง
+เม็ดบัว
+กล้วย -->
