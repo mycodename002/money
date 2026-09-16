@@ -27,3 +27,4 @@ try {
 } catch (Throwable $th) {
     $_SESSION['alarm'] = "เกิดข้อผิดพลาดในการเพิ่มสมาชิก";
 }
+backPage();

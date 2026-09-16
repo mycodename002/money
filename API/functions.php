@@ -3,7 +3,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
+// รันบนพอร์ตไหนก็มาแก้ด้วยเด้อ
 define('BASE_URL', 'http://localhost:8000/');
 
 function base_url($path = '') {
@@ -16,10 +16,10 @@ function select($conn,$sql)  {
     return $stmt->fetchAll();
 }
 
-function protectSelect($conn,$sql,$param,$one){
+function protectSelect($conn,$sql,$param,$multi){
     $stmt = $conn->prepare($sql);
     $stmt->execute($param);
-    if($one) $data = $stmt->fetchAll();
+    if($multi) $data = $stmt->fetchAll();
     else $data = $stmt->fetch();
     return $data;
 }  

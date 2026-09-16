@@ -1,5 +1,5 @@
 <?php 
-require_once "db.php";
+require_once "../db.php";
 require_once "./API/functions.php";
 
 $_SESSION['auth']['id'] = $_POST['id'];

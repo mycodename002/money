@@ -15,9 +15,8 @@ if(isset($_GET['page'])){
     $page = (int)$_GET['page'];
 }
 $admin_group = $_SESSION['auth']['admin_group'];
-$count_max = select($conn, "SELECT COUNT(id) AS C FROM `members` WHERE admin_group = '$admin_group' AND is_deleted = 0;");
-
-$count_max = $count_max[0]['C'];
+$count_max = protectSelect($conn,"SELECT COUNT(id) AS C FROM `group_mem` WHERE id_group_admin = :ad_id AND is_deleted = 0;",["ad_id"=>$admin_group],0);
+$count_max = $count_max['C'];
 $start = ($page-1)*25;
 
 // เพิ่มการดึงฟิลด์ user มาด้วยเพื่อนำไปแสดงใน Modal แก้ไข
@@ -26,7 +25,12 @@ $data = select($conn,$sql);
 ?>
 
 <div class="container mx-auto px-4 mt-4">
-    <div class="overflow-x-auto">
+    <!-- <div class="overflow-x-auto">
+        <h2 class="text-xl font-bold mb-4">กลุ่ม</h2>
+
+    </div> -->
+    <?php require_once './groupManage.php'; ?>
+    <div class="overflow-x-auto mt-8">
         <h2 class="text-xl font-bold mb-4">รายชื่อผู้ใช้</h2>
         <button class = "btn btn-soft btn-primary" onclick="insert_user.showModal()">เพิ่มสมาชิก</button>
         <table class="table w-full">
