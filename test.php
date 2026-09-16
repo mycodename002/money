@@ -2,7 +2,8 @@
 require_once "db.php";
 require_once "./API/functions.php";
 
+$_SESSION['auth']['id'] = $_POST['id'];
+$_SESSION['auth']['rule'] = $_POST['rule'];
+$_SESSION['auth']['admin_group'] = $_POST['admin'];
 
-// $sql = "DELETE FROM `members` WHERE id = :id";
-// $param = ['id' => 28];
-// delete($conn,$sql,$param);
+backPage();
