@@ -120,9 +120,11 @@ $data = select($conn,$sql);
         </div>
 
         <!-- 2. ฟอร์มคุมรายการ Checkbox และปุ่มยืนยัน -->
-        <form id="addMembersForm" action="../../API/admin/addMultipleMembersToEvent.php" method="POST">
+        <form id="addMembersForm" action="../../API/admin/process.php" method="POST">
             <!-- ส่ง ID ของ Event ไปด้วย -->
             <input type="hidden" name="id_event" value="<?php echo $id; ?>">
+            <input type="hidden" name="action" value="addMultipleMembersToEvent">
+
 
             <!-- ส่วนควบคุม เลือกทั้งหมด / ไม่เลือกเลย -->
             <div id="select_all_container" class="flex justify-between items-center mb-2 px-1 hidden">
@@ -169,7 +171,7 @@ function fetchMembersByGroup(groupId) {
     submitBtn.classList.add('hidden');
 
     // ดึงข้อมูลผ่าน AJAX
-    fetch(`../../API/admin/getMembersByGroup.php?group_id=${groupId}&id_event=${id_event}`)
+    fetch(`<?php echo base_url();?>API/admin/process.php?group_id=${groupId}&id_event=${id_event}&action=getMembersByGroup`)
         .then(response => response.json())
         .then(data => {
             if (data.length === 0) {
@@ -215,9 +217,10 @@ function toggleSelectAll(isChecked) {
         <h3 class="font-bold text-lg text-error mb-4">ลบสมาชิก</h3>
         <p class="py-2">คุณแน่ใจหรือไม่ว่าต้องการลบสมาชิกคนนี้?</p>
         
-        <form id="deleteForm" action="../../API/admin/deletememberFromEvent.php" method="POST">
+        <form id="deleteForm" action="../../API/admin/process.php" method="POST">
             <input type="hidden" id="delete_id" name="id">
             <input type="hidden" id="delete_id_event" name="id_event">
+            <input type="hidden" id="" name="action" value="deletememberFromEvent">
 
             <div class="modal-action">
                 <!-- ส่ง Form ID 'deleteForm' เข้าไป -->

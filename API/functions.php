@@ -48,4 +48,24 @@ function backPage() {
     }
     </script>';
 }
+
+function checkAction($action,$post){
+    if($post){
+        if(!isset($_POST['action'])){
+            return false;
+        }
+        if($_POST['action'] == $action){
+            return true;
+        }
+        return false;
+    }
+    if(!isset($_GET['action'])){
+        return false;
+    }
+    if($_GET['action'] == $action){
+        return true;
+    }
+    return false;
+    
+}
 ?>

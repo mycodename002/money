@@ -105,8 +105,9 @@ $data = select($conn,$sql);
     <div class="modal-box">
         <h3 class="font-bold text-lg mb-4">แก้ไขข้อมูลสมาชิก</h3>
         
-        <form id="editForm" action="../../API/admin/editMember.php" method="POST">
+        <form id="editForm" action="../../API/admin/process.php" method="POST">
             <input type="hidden" id="edit_id" name="id">
+                <input type="hidden" id="delete_id" name="action" value="editMember">
 
             <div class="form-control w-full mb-3">
                 <label class="label"><span class="label-text">Username</span></label>
@@ -141,8 +142,9 @@ $data = select($conn,$sql);
         <h3 class="font-bold text-lg text-error mb-4">ลบสมาชิก</h3>
         <p class="py-2">คุณแน่ใจหรือไม่ว่าต้องการลบสมาชิกคนนี้?</p>
         
-        <form id="deleteForm" action="../../API/admin/deleteMember.php" method="POST">
+        <form id="deleteForm" action="../../API/admin/process.php" method="POST">
             <input type="hidden" id="delete_id" name="id">
+            <input type="hidden" id="delete_id" name="action" value="deleteMember">
 
             <div class="modal-action">
                 <!-- ส่ง Form ID 'deleteForm' เข้าไป -->

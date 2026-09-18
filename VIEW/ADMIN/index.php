@@ -19,14 +19,48 @@ $datas = select($conn,$sql);
 <div class="container mx-auto px-4 mt-4">
     <ul class="list bg-base-100 rounded-box shadow-md">
   
-  <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">รายการ</li>
-  <?php foreach($datas  as $row){?>
-  <li class="list-row">
+  <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">รายการ ดำเนินการอยู่</li>
+  <?php 
+  if(empty($datas)){
+    echo '<li class="p-4 pb-2 text-xs opacity-60 tracking-wide">';
+      echo '<div class="text-xs uppercase font-semibold opacity-60">ยังไม่มีรายการที่ดำเนินการอยู่</div>';
+      echo '</li>';
+      // exit;
+  }
+  foreach($datas  as $row){?>
+  <li class="list-row" onclick="window.location.href='<?php echo base_url('VIEW/ADMIN/detail.php?id=').$row['id'] ?>'">
     <div>
       <div><?php echo $row['titel'];?></div>
       <div class="text-xs uppercase font-semibold opacity-60"><?php echo $row['details']; ?></div>
     </div>
-    
+    <div class="badge badge-soft badge-success">ดำเนินการอยู่</div>
+  </li>
+  <?php } ?>
+</ul>
+</div>
+
+
+<?php
+$datasuccess = select($conn,"SELECT e.id, e.titel, e.details  FROM `group_admin_event` AS g JOIN `events` AS e ON g.id_event = e.id WHERE g.id_group_admin = $admin_group AND e.is_deleted = 0 AND e.is_success = 1 ;");
+?>
+<div class="container mx-auto px-4 mt-4">
+    <ul class="list bg-base-100 rounded-box shadow-md">
+  
+  <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">รายการ ดำเนินการเสร็จสิ้น</li>
+  <?php 
+  if(empty($datasuccess)){
+    echo '<li class="p-4 pb-2 text-xs opacity-60 tracking-wide">';
+      echo '<div class="text-xs uppercase font-semibold opacity-60">ยังไม่มีรายการที่ดำเนินการเสร็จสิ้น</div>';
+      echo '</li>';
+      // exit;
+  }
+  foreach($datasuccess  as $row){?>
+  <li class="list-row" onclick="window.location.href='<?php echo base_url('VIEW/ADMIN/detail.php?id=').$row['id'] ?>'">
+    <div>
+      <div><?php echo $row['titel'];?></div>
+      <div class="text-xs uppercase font-semibold opacity-60"><?php echo $row['details']; ?></div>
+    </div>
+    <div class="badge badge-soft badge-error">ดำเนินการเสร็จสิ้น</div>
   </li>
   <?php } ?>
 </ul>

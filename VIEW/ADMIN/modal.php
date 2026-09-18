@@ -7,7 +7,7 @@
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </form>
     <!-- <div class="card shrink-0 w-full max-w-md shadow-2xl bg-base-100"> -->
-  <form class="card-body space-y-4" action="<?php echo base_url('/API/admin/insertUser.php');?>" method="post">
+  <form class="card-body space-y-4" action="<?php echo base_url('/API/admin/process.php');?>" method="post">
     <h2 class="card-title text-2xl font-bold justify-center mb-2">ลงทะเบียนใช้งาน</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
       <!-- fname -->
@@ -22,6 +22,7 @@
           <input type="text" name="fname" class="grow" placeholder="ชื่อจริง" required />
         </label>
       </fieldset>
+      <input type="hidden" id="delete_id" name="action" value="insertUser">
 
       <!-- lname -->
       <fieldset class="fieldset">

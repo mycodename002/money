@@ -51,7 +51,7 @@ $data = select($conn,$sql);
                     <td>
                         <!-- ปุ่มแก้ไข: ส่งข้อมูลไปยัง JS เพื่อเปิด Modal พร้อมเติมข้อมูลเดิม -->
                         <button class="btn btn-soft btn-warning btn-sm" 
-                                onclick="openEditModal('<?php echo $value['id']; ?>')">
+                                onclick="openEditModal('<?php echo $value['id']; ?>','<?php echo $value['titel']; ?>', '<?php echo $value['details']; ?>')">
                             แก้ไข
                         </button>
                         <button onclick="openDeleteModal('<?php echo $value['id']; ?>')" class="btn btn-soft btn-error btn-sm">ลบ</button>
@@ -95,10 +95,117 @@ $data = select($conn,$sql);
         </div>
     </div>
 </div>
+
+
+<!-- modalll -->
+ <dialog id="Modal_edit" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">แก้ไขรายการ</h3>
+        
+        <form id="editForm" action="./../API/admin/editMember.php" method="POST">
+            <input type="hidden" id="edit_id" name="id">
+
+            <div class="form-control w-full mb-3">
+                <label class="label"><span class="label-text">รายการ</span></label>
+                <input type="text" id="edit_titel" name="tital" class="input input-bordered w-full" required />
+            </div>
+
+            <div class="form-control w-full mb-3">
+                <label class="label"><span class="label-text">รายละเอียด</span></label>
+                <input type="text" id="edit_details" name="details" class="input input-bordered w-full" required />
+            </div>
+            
+            <div class="modal-action">
+                <!-- ส่ง Form ID 'editForm' เข้าไป -->
+                <button type="button" class="btn btn-soft btn-success" onclick="openConfirmModal('editForm')">บันทึกการแก้ไข</button>
+                <button type="button" class="btn" onclick="document.getElementById('Modal_edit').close()">ยกเลิก</button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
+<dialog id="Modal_confirm" class="modal">
+    <div class="modal-box text-center">
+        <h3 class="font-bold text-xl text-warning mb-2">ยืนยันการทำรายการ</h3>
+        <p class="py-2 text-gray-600">คุณต้องการดำเนินการตามรายการนี้ใช่หรือไม่?</p>
+        <div class="modal-action justify-center gap-4 mt-4">
+            <button type="button" class="btn btn-success px-6" onclick="submitEditForm()">ยืนยัน</button>
+            <button type="button" class="btn btn-ghost" onclick="document.getElementById('Modal_confirm').close()">ยกเลิก</button>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
+<dialog id="Modal_del" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg text-error mb-4">ลบสมาชิก</h3>
+        <p class="py-2">คุณแน่ใจหรือไม่ว่าต้องการลบสมาชิกคนนี้?</p>
+        
+        <form id="deleteForm" action="./../API/admin/deleteMember.php" method="POST">
+            <input type="hidden" id="delete_id" name="id">
+            <input type="hidden" id="" name="type" value="del_event">
+
+            <div class="modal-action">
+                <!-- ส่ง Form ID 'deleteForm' เข้าไป -->
+                <button type="button" class="btn btn-error" onclick="openConfirmModal('deleteForm')">ยืนยันการลบ</button>
+                <button type="button" class="btn" onclick="document.getElementById('Modal_del').close()">ยกเลิก</button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
 <script>
     function redirect(url){
         window.location.href = url;
     }
+
+// ตัวแปรเก็บ ID ของ <form> ที่ต้องการ submit
+var currentFormId = "";
+
+// 1. ฟังก์ชันเปิด Modal แก้ไข และใส่ข้อมูลเดิม
+function openEditModal(id, titel, details) {
+    document.getElementById('edit_id').value = id;
+    document.getElementById('edit_titel').value = titel;
+    document.getElementById('edit_details').value = details;
+
+    document.getElementById('Modal_edit').showModal();
+}
+
+// 2. ฟังก์ชันเปิด Modal ลบ และใส่ ID ผู้ใช้
+function openDeleteModal(id) {
+    document.getElementById('delete_id').value = id;
+    document.getElementById('Modal_del').showModal();
+}
+
+// 3. ตรวจสอบความถูกต้องของฟอร์ม (Form ID) แล้วเปิด Modal ยืนยัน
+function openConfirmModal(formId) {
+    currentFormId = formId; // บันทึก id ของ form ที่ใช้งานอยู่
+    const form = document.getElementById(currentFormId);
+    
+    // ตรวจสอบความถูกต้องของ Input (เช่น required)
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+    
+    // เปิด Modal ยืนยัน
+    document.getElementById('Modal_confirm').showModal();
+}
+
+// 4. ฟังก์ชันส่ง Form ไปยังไฟล์ประมวลผลจริง
+function submitEditForm() {
+    if (currentFormId) {
+        document.getElementById(currentFormId).submit();
+    }
+}
+    
     
 </script>
 
