@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 13, 2026 at 04:42 PM
+-- Generation Time: Sep 20, 2026 at 06:11 PM
 -- Server version: 12.3.3-MariaDB
 -- PHP Version: 8.0.30
 
@@ -29,18 +29,26 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `base_group_member` (
   `id` int(11) NOT NULL,
-  `id_group_admin` int(11) NOT NULL,
   `id_mem` int(11) NOT NULL,
-  `id_` int(11) NOT NULL
+  `id_name_group` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `base_group_member`
 --
 
-INSERT INTO `base_group_member` (`id`, `id_group_admin`, `id_mem`, `id_`) VALUES
-(1, 1, 1, 1),
-(2, 1, 2, 1);
+INSERT INTO `base_group_member` (`id`, `id_mem`, `id_name_group`) VALUES
+(1, 4, 1),
+(2, 5, 1),
+(3, 6, 1),
+(4, 7, 2),
+(5, 8, 2),
+(6, 2, 1),
+(7, 3, 1),
+(9, 11, 2),
+(10, 2, 3),
+(11, 11, 3),
+(12, 2, 4);
 
 -- --------------------------------------------------------
 
@@ -50,38 +58,22 @@ INSERT INTO `base_group_member` (`id`, `id_group_admin`, `id_mem`, `id_`) VALUES
 
 CREATE TABLE `events` (
   `id` int(11) NOT NULL,
-  `titel` varchar(100) NOT NULL,
+  `title` varchar(100) NOT NULL,
   `details` text NOT NULL,
-  `is_deleted` tinyint(1) NOT NULL
+  `id_group_admin` int(11) NOT NULL,
+  `is_deleted` tinyint(1) NOT NULL,
+  `is_success` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `events`
 --
 
-INSERT INTO `events` (`id`, `titel`, `details`, `is_deleted`) VALUES
-(1, 'เก็บตังค์โว้ย 2', '', 0),
-(2, 'กิจกรรมจิตอาสาปลูกป่า', 'ร่วมกันปลูกป่าชายเลนและเก็บขยะชายหาด', 0),
-(3, 'เก็บตังค์โว้ยย 3', 'อาทิตย์อะไรวะ', 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `groups`
---
-
-CREATE TABLE `groups` (
-  `id` int(11) NOT NULL,
-  `groupname` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `groups`
---
-
-INSERT INTO `groups` (`id`, `groupname`) VALUES
-(1, 'ป.ตรี 4ปี '),
-(2, 'ป.ตรี เทียบโอน');
+INSERT INTO `events` (`id`, `title`, `details`, `id_group_admin`, `is_deleted`, `is_success`) VALUES
+(1, 'เก็บเงินค่าเสื้อเอก ปี 2', 'ชำระค่าเสื้อเอกคนละ 3000 บาท', 1, 0, 0),
+(2, 'โครงการจิตอาสาปลูกป่า', 'ค่าลงทะเบียนเดินทางและอาหาร 200 บาท', 1, 0, 0),
+(3, 'เก็บเงินห้อง สัปดาห์ 18', '', 1, 0, 1),
+(4, 'test', '', 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -101,28 +93,7 @@ CREATE TABLE `group_admins` (
 
 INSERT INTO `group_admins` (`id`, `id_admin`, `id_group`) VALUES
 (1, 1, 1),
-(2, 21, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `group_admin_event`
---
-
-CREATE TABLE `group_admin_event` (
-  `id` int(11) NOT NULL,
-  `id_group_admin` int(11) NOT NULL,
-  `id_event` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `group_admin_event`
---
-
-INSERT INTO `group_admin_event` (`id`, `id_group_admin`, `id_event`) VALUES
-(1, 1, 1),
-(2, 2, 2),
-(3, 1, 3);
+(2, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -132,18 +103,21 @@ INSERT INTO `group_admin_event` (`id`, `id_group_admin`, `id_event`) VALUES
 
 CREATE TABLE `group_mem` (
   `id` int(11) NOT NULL,
-  `titel` varchar(50) NOT NULL,
-  `details` varchar(255) NOT NULL
+  `title` varchar(50) NOT NULL,
+  `details` varchar(255) NOT NULL,
+  `id_group_admin` int(11) NOT NULL,
+  `is_deleted` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `group_mem`
 --
 
-INSERT INTO `group_mem` (`id`, `titel`, `details`) VALUES
-(1, 'ป.ตรี 4 ปี ปี2', 'บลาๆๆๆๆๆๆๆนาๆๆๆๆๆ '),
-(2, 'ทีมจิตอาสา A', 'ทีมเตรียมอุปกรณ์ปลูกป่า'),
-(3, 'ฝ่ายจัดเลี้ยง', 'ทีมดูแลอาหารและสถานที่งานปีใหม่');
+INSERT INTO `group_mem` (`id`, `title`, `details`, `id_group_admin`, `is_deleted`) VALUES
+(1, 'ป.ตรี 4 ปี ปี 2', 'กลุ่มนักศึกษาชั้นปีที่ 2', 1, 0),
+(2, 'ทีมจิตอาสา A', 'กลุ่มลงทะเบียนทีมงานจิตอาสา', 1, 0),
+(3, 'ปี 5', 'ปีแก่ ปีลึก', 1, 0),
+(4, 'กีฬาสี สีบลาๆ', '', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -167,29 +141,18 @@ CREATE TABLE `members` (
 --
 
 INSERT INTO `members` (`id`, `fname`, `lname`, `user`, `pass`, `rule`, `admin_group`, `is_deleted`) VALUES
-(1, 'สมชาย', 'ชาย', 'somchai', '$2y$10$T8ZCb1zLsMor7wcfDVGwoOEg57MLgFcJRc/6mJDZrdMwhXVvXiLCG', 'admin', 1, 0),
-(2, 'วิภา', 'ภา', 'wipha', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'support', 1, 0),
-(3, 'กิตติ', 'ตติ', 'kitti', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 1, 0),
-(4, 'นภา', 'ภา', 'napha', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 1, 0),
-(5, 'อนุชา', 'ชา', 'anucha', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 1, 0),
-(6, 'สิริพร', 'พร', 'siriporn', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 1, 0),
-(7, 'ธีรภัทร์', 'ภัทร์', 'theerapat', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 1, 0),
-(8, 'ปรียา', 'ปรีย์', 'preeya', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 1, 0),
-(9, 'ณัฐวุฒิ', 'วุฒิ', 'nattawut', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 1, 0),
-(10, 'กัญญารัตน์', 'ก้อย', 'kanyarat', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 1, 0),
-(11, 'ชยพล', 'พล', 'chayapol', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0, 0),
-(12, 'ธนกฤต', 'กฤต', 'thanakrit', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0, 0),
-(13, 'ปานทิพย์', 'ทิพย์', 'panthip', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0, 0),
-(14, 'พิชญะ', 'พีท', 'pichaya', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0, 0),
-(15, 'ภัทรวดี', 'ภัทร', 'pattarawadee', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0, 0),
-(16, 'เมธาสิทธิ์', 'เมธ', 'methasit', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0, 0),
-(17, 'วรินทร', 'ริน', 'warinthorn', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0, 0),
-(18, 'ศุภโชค', 'โชค', 'suphachok', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0, 0),
-(19, 'อริสา', 'ริสา', 'arisa', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0, 0),
-(20, 'เอกชัย', 'เอก', 'ekachai', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1234567890abcdefghijklm', 'user', 0, 0),
-(21, 'วรัญชัย', 'วิใจคำ', 'om', '$2y$10$T8ZCb1zLsMor7wcfDVGwoOEg57MLgFcJRc/6mJDZrdMwhXVvXiLCG', 'admin', 1, 0),
-(23, 'วรัญชัย', 'วิใจคำ', 'om1', '$2y$10$xshylO5kwAXDZr6DomyYh.syazka1lJGtWJOOX90/yUoRGjQ31kJu', 'user', 0, 0),
-(25, 'วรัชยา', 'ค้าคล่อง', 'nam', '$2y$10$F/TSbDymWXvQ5NGHXrvLMe/NAO/VHBXac8Kud47OFLXGLEPk3AanK', 'admin', 0, 0);
+(1, 'สมชาย', 'สายเปย์', 'admin1', '$2y$10$ipoUPM5434uerWeg3QU9ieAhyqiLlYT/qFkwpNRuMWsZmK1K5HPrm', 'admin', 1, 0),
+(2, 'วรัญชัย', 'วิใจคำ', 'om', '$2y$10$ipoUPM5434uerWeg3QU9ieAhyqiLlYT/qFkwpNRuMWsZmK1K5HPrm', 'admin', 1, 0),
+(3, 'วิภา', 'ผู้ช่วย', 'support1', '$2y$10$ipoUPM5434uerWeg3QU9ieAhyqiLlYT/qFkwpNRuMWsZmK1K5HPrm', 'support', 1, 0),
+(4, 'กิตติ', 'รักเรียน', 'kitti', '$2y$10$ipoUPM5434uerWeg3QU9ieAhyqiLlYT/qFkwpNRuMWsZmK1K5HPrm', 'user', 1, 0),
+(5, 'นภา', 'แจ่มใส', 'napha', '$2y$10$ipoUPM5434uerWeg3QU9ieAhyqiLlYT/qFkwpNRuMWsZmK1K5HPrm', 'user', 1, 0),
+(6, 'อนุชา', 'ตั้งใจ', 'anucha', '$2y$10$ipoUPM5434uerWeg3QU9ieAhyqiLlYT/qFkwpNRuMWsZmK1K5HPrm', 'user', 1, 0),
+(7, 'สิริพร', 'งดงาม', 'siriporn', '$2y$10$ipoUPM5434uerWeg3QU9ieAhyqiLlYT/qFkwpNRuMWsZmK1K5HPrm', 'user', 1, 0),
+(8, 'ธีรภัทร์', 'กล้าหาญ', 'theerapat', '$2y$10$ipoUPM5434uerWeg3QU9ieAhyqiLlYT/qFkwpNRuMWsZmK1K5HPrm', 'user', 1, 0),
+(9, 'ปรียา', 'ใจดี', 'preeya', '$2y$10$ipoUPM5434uerWeg3QU9ieAhyqiLlYT/qFkwpNRuMWsZmK1K5HPrm', 'user', 0, 0),
+(10, 'ณัฐวุฒิ', 'สุดซอย', 'nattawut', '$2y$10$ipoUPM5434uerWeg3QU9ieAhyqiLlYT/qFkwpNRuMWsZmK1K5HPrm', 'user', 0, 0),
+(11, 'oiuytr', 'oiuyf', 'pp', '$2y$10$BwTXf0xwGF1J1NM8bL6Zt.vZmNlKutePoeBajLdwW.xhNjKG.h8a6', 'user', 1, 0),
+(12, 'ผม', 'ชื่ออะไร', 'name', '$2y$10$75VEBKlUx8z6ibQYvvMwpeYIK0OoevrL6yNEgvOZzfwaRu8N/gBr6', 'user', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -208,36 +171,19 @@ CREATE TABLE `mem_event` (
 --
 
 INSERT INTO `mem_event` (`id`, `id_mem`, `id_event`) VALUES
-(1, 1, 1),
-(2, 2, 1),
-(3, 3, 1),
-(4, 4, 1),
-(5, 5, 1),
-(6, 6, 1),
-(7, 7, 1),
-(8, 8, 1),
-(9, 9, 1),
-(10, 10, 1),
-(11, 1, 2),
-(12, 3, 2),
-(13, 5, 2),
-(14, 7, 2),
-(15, 9, 2),
-(16, 11, 2),
-(17, 12, 2),
-(18, 13, 2),
-(19, 14, 2),
-(20, 15, 2),
-(21, 2, 3),
-(22, 4, 3),
-(23, 6, 3),
-(24, 8, 3),
-(25, 10, 3),
-(26, 16, 3),
-(27, 17, 3),
-(28, 18, 3),
-(29, 19, 3),
-(30, 20, 3);
+(3, 7, 1),
+(16, 4, 1),
+(17, 6, 1),
+(19, 3, 1),
+(20, 2, 1),
+(21, 4, 2),
+(22, 5, 2),
+(23, 6, 2),
+(24, 2, 2),
+(25, 3, 2),
+(26, 8, 1),
+(27, 11, 1),
+(29, 12, 1);
 
 -- --------------------------------------------------------
 
@@ -251,7 +197,7 @@ CREATE TABLE `slips` (
   `date` timestamp NOT NULL DEFAULT current_timestamp(),
   `id_event` int(11) NOT NULL,
   `add_by` int(11) NOT NULL,
-  `amount` decimal(10,2) NOT NULL,
+  `amount` decimal(10,2) DEFAULT NULL,
   `title` varchar(50) DEFAULT NULL,
   `details` text DEFAULT NULL,
   `type` enum('รายรับ','รายจ่าย') NOT NULL,
@@ -263,10 +209,13 @@ CREATE TABLE `slips` (
 --
 
 INSERT INTO `slips` (`id`, `file_name`, `date`, `id_event`, `add_by`, `amount`, `title`, `details`, `type`, `status`) VALUES
-(1, 'slip_001.jpg', '2026-09-10 06:22:46', 1, 1, 1500.00, '', '', 'รายรับ', 'ผ่าน'),
-(2, 'slip_002.png', '2026-09-10 06:22:46', 1, 3, 1500.00, '', '', 'รายรับ', 'รอตรวจสอบ'),
-(3, 'slip_003.jpg', '2026-09-10 06:22:46', 2, 2, 5000.00, 'ค่าอุปกรณ์ปลูกป่าชำระค่าลงทะเบียน กิ', 'ซื้อต้นกล้าและถุงมือ', 'รายจ่าย', 'ผ่าน'),
-(4, 'slip_004.pdf', '2026-09-10 06:22:46', 3, 4, 1200.00, 'ค่ามัดจำสถานที่', 'มัดจำห้องจัดเลี้ยง', 'รายจ่าย', 'รอตรวจสอบ');
+(1, '1_123.jpg', '2026-09-16 07:49:01', 1, 4, 350.00, 'ค่าเสื้อเอก', 'ชำระผ่านพร้อมเพย์', 'รายรับ', 'ผ่าน'),
+(2, 'slip_002.png', '2026-09-16 07:49:01', 1, 7, 350.00, 'ค่าเสื้อเอก', 'โอนช่วงเย็น', 'รายรับ', 'ไม่ผ่าน'),
+(3, 'slip_003.jpg', '2026-09-16 07:49:01', 2, 7, 200.00, 'ค่าจิตอาสา', 'ร่วมโครงการปลูกป่า', 'รายรับ', 'ผ่าน'),
+(4, 'event_1_20260920112213_6.jpg', '2026-09-20 09:22:13', 1, 6, NULL, NULL, NULL, 'รายรับ', 'ผ่าน'),
+(5, 'event_1_20260920112530_3.jpg', '2026-09-20 09:25:30', 1, 3, NULL, NULL, NULL, 'รายรับ', 'ไม่ผ่าน'),
+(6, 'event_2_20260920164712_5.jpg', '2026-09-20 14:40:17', 2, 5, NULL, NULL, NULL, 'รายรับ', 'ผ่าน'),
+(7, 'event_2_20260920164742_6.jpg', '2026-09-20 14:47:24', 2, 6, NULL, NULL, NULL, 'รายรับ', 'ผ่าน');
 
 --
 -- Indexes for dumped tables
@@ -285,24 +234,10 @@ ALTER TABLE `events`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `groups`
---
-ALTER TABLE `groups`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `group_admins`
 --
 ALTER TABLE `group_admins`
   ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `group_admin_event`
---
-ALTER TABLE `group_admin_event`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_group_admin_members` (`id_group_admin`),
-  ADD KEY `fk_group_admin_events` (`id_event`);
 
 --
 -- Indexes for table `group_mem`
@@ -341,19 +276,13 @@ ALTER TABLE `slips`
 -- AUTO_INCREMENT for table `base_group_member`
 --
 ALTER TABLE `base_group_member`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `groups`
---
-ALTER TABLE `groups`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `group_admins`
@@ -362,45 +291,32 @@ ALTER TABLE `group_admins`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `group_admin_event`
---
-ALTER TABLE `group_admin_event`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
 -- AUTO_INCREMENT for table `group_mem`
 --
 ALTER TABLE `group_mem`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `members`
 --
 ALTER TABLE `members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `mem_event`
 --
 ALTER TABLE `mem_event`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `slips`
 --
 ALTER TABLE `slips`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `group_admin_event`
---
-ALTER TABLE `group_admin_event`
-  ADD CONSTRAINT `fk_group_admin_events` FOREIGN KEY (`id_event`) REFERENCES `events` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_group_admin_members` FOREIGN KEY (`id_group_admin`) REFERENCES `members` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `mem_event`

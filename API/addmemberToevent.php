@@ -6,5 +6,6 @@ if(empty($id)){
     exit;
 }
 $_SESSION['addByURL'] = $id;
-require_once './auth.php';
+header('location:'.base_url('/API/login.php'));
+ 
 ?>
