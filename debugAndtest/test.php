@@ -7,3 +7,4 @@ $_SESSION['auth']['rule'] = $_POST['rule'];
 $_SESSION['auth']['admin_group'] = $_POST['admin'];
 
 backPage();
+// ทำอะไรก็ได้ ใช้เทสเป็นหลัก 

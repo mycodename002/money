@@ -15,20 +15,20 @@ if(isset($_GET['page'])){
     $page = (int)$_GET['page'];
 }
 $admin_group = $_SESSION['auth']['admin_group']; 
-$count_max = select($conn, "SELECT COUNT(e.id) AS C FROM `group_admin_event` AS g JOIN `events` AS e ON g.id_event = e.id WHERE g.id_group_admin = $admin_group AND e.is_deleted = 0 AND e.is_success = 0;");
+$count_max = select($conn, "SELECT COUNT(e.id) AS C FROM `events` AS e  WHERE e.id_group_admin = $admin_group AND e.is_deleted = 0 AND e.is_success = 0;");
 
 $count_max = $count_max[0]['C'];
 $start = ($page-1)*25;
 
 // เพิ่มการดึงฟิลด์ user มาด้วยเพื่อนำไปแสดงใน Modal แก้ไข
-$sql = "SELECT e.id, e.titel, e.details  FROM `group_admin_event` AS g JOIN `events` AS e ON g.id_event = e.id WHERE g.id_group_admin = $admin_group AND e.is_deleted = 0 AND e.is_success = 0 LIMIT $start,25;";
+$sql = "SELECT e.id, e.title, e.details  FROM `events` AS e WHERE e.id_group_admin = $admin_group AND e.is_deleted = 0 AND e.is_success = 0 LIMIT $start,25;";
 $data = select($conn,$sql);
 ?>
 
-<div class="container mx-auto px-4 mt-4">
+<div class="container mx-auto px-4 mt-4 shadow-md ">
     <div class="overflow-x-auto">
         <h2 class="text-xl font-bold mb-4">รายการ</h2>
-        <button class = "btn btn-soft btn-primary" onclick="insert_user.showModal()">เพิ่มสมาชิก</button>
+        <button class = "btn btn-soft btn-primary" onclick="Modal_addEvent.showModal()">เพิ่มสมาชิก</button>
         <table class="table w-full">
             <!-- head -->
             <thead>
@@ -45,13 +45,13 @@ $data = select($conn,$sql);
                 foreach ($data as $value) { ?>
                 <tr>
                     <th><?php echo $count++; ?></th>
-                    <td><?php echo $value['titel']; ?></td>
+                    <td><?php echo $value['title']; ?></td>
                     <td><?php echo $value['details']; ?></td>
                     
                     <td>
                         <!-- ปุ่มแก้ไข: ส่งข้อมูลไปยัง JS เพื่อเปิด Modal พร้อมเติมข้อมูลเดิม -->
                         <button class="btn btn-soft btn-warning btn-sm" 
-                                onclick="openEditModal('<?php echo $value['id']; ?>','<?php echo $value['titel']; ?>', '<?php echo $value['details']; ?>')">
+                                onclick="openEditModal('<?php echo $value['id']; ?>','<?php echo $value['title']; ?>', '<?php echo $value['details']; ?>')">
                             แก้ไข
                         </button>
                         <button onclick="openDeleteModal('<?php echo $value['id']; ?>')" class="btn btn-soft btn-error btn-sm">ลบ</button>
@@ -98,21 +98,52 @@ $data = select($conn,$sql);
 
 
 <!-- modalll -->
- <dialog id="Modal_edit" class="modal">
+<dialog id="Modal_addEvent" class="modal">
     <div class="modal-box">
-        <h3 class="font-bold text-lg mb-4">แก้ไขรายการ</h3>
+        <h3 class="font-bold text-lg mb-4">เพิ่มรายการรายการ</h3>
         
-        <form id="editForm" action="./../API/admin/editMember.php" method="POST">
-            <input type="hidden" id="edit_id" name="id">
+        <form id="addEvent" action="<?php echo base_url('API/admin/process.php')?>" method="POST">
+            <input type="hidden" name="action" value="addEvent">
 
             <div class="form-control w-full mb-3">
                 <label class="label"><span class="label-text">รายการ</span></label>
-                <input type="text" id="edit_titel" name="tital" class="input input-bordered w-full" required />
+                <input type="text" id="" name="title" class="input input-bordered w-full" required />
             </div>
 
             <div class="form-control w-full mb-3">
                 <label class="label"><span class="label-text">รายละเอียด</span></label>
-                <input type="text" id="edit_details" name="details" class="input input-bordered w-full" required />
+                <input type="text" id="" name="details" class="input input-bordered w-full" />
+            </div>
+            
+            <div class="modal-action">
+                <!-- ส่ง Form ID 'editForm' เข้าไป -->
+                <button type="button" class="btn btn-soft btn-success" onclick="openConfirmModal('addEvent')">บันทึก</button>
+                <button type="button" class="btn" onclick="document.getElementById('Modal_addEvent').close()">ยกเลิก</button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
+
+ <dialog id="Modal_edit" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">แก้ไขรายการ</h3>
+        
+        <form id="editForm" action="<?php echo base_url('API/admin/process.php')?>" method="POST">
+            <input type="hidden" id="edit_id" name="id">
+            <input type="hidden" name="action" value="editEvent">
+
+            <div class="form-control w-full mb-3">
+                <label class="label"><span class="label-text">รายการ</span></label>
+                <input type="text" id="edit_title" name="title" class="input input-bordered w-full" required />
+            </div>
+
+            <div class="form-control w-full mb-3">
+                <label class="label"><span class="label-text">รายละเอียด</span></label>
+                <input type="text" id="edit_details" name="details" class="input input-bordered w-full"  />
             </div>
             
             <div class="modal-action">
@@ -143,12 +174,12 @@ $data = select($conn,$sql);
 
 <dialog id="Modal_del" class="modal">
     <div class="modal-box">
-        <h3 class="font-bold text-lg text-error mb-4">ลบสมาชิก</h3>
-        <p class="py-2">คุณแน่ใจหรือไม่ว่าต้องการลบสมาชิกคนนี้?</p>
+        <h3 class="font-bold text-lg text-error mb-4">ลบรายการ</h3>
+        <p class="py-2">คุณแน่ใจหรือไม่ว่าต้องการลบรายการนี้?</p>
         
-        <form id="deleteForm" action="./../API/admin/deleteMember.php" method="POST">
+        <form id="deleteForm" action="../../API/admin/process.php" method="POST">
             <input type="hidden" id="delete_id" name="id">
-            <input type="hidden" id="" name="type" value="del_event">
+            <input type="hidden" name="action" value="deleteEvent">
 
             <div class="modal-action">
                 <!-- ส่ง Form ID 'deleteForm' เข้าไป -->
@@ -170,9 +201,9 @@ $data = select($conn,$sql);
 var currentFormId = "";
 
 // 1. ฟังก์ชันเปิด Modal แก้ไข และใส่ข้อมูลเดิม
-function openEditModal(id, titel, details) {
+function openEditModal(id, title, details) {
     document.getElementById('edit_id').value = id;
-    document.getElementById('edit_titel').value = titel;
+    document.getElementById('edit_title').value = title;
     document.getElementById('edit_details').value = details;
 
     document.getElementById('Modal_edit').showModal();

@@ -24,7 +24,7 @@ $sql = "SELECT id, fname, lname, user FROM `members` WHERE admin_group = '$admin
 $data = select($conn,$sql);
 ?>
 
-<div class="container mx-auto px-4 mt-4">
+<div class="container mx-auto px-4 mt-4 shadow-md ">
     <!-- <div class="overflow-x-auto">
         <h2 class="text-xl font-bold mb-4">กลุ่ม</h2>
 
@@ -107,7 +107,7 @@ $data = select($conn,$sql);
         
         <form id="editForm" action="../../API/admin/process.php" method="POST">
             <input type="hidden" id="edit_id" name="id">
-                <input type="hidden" id="delete_id" name="action" value="editMember">
+                <input type="hidden" id="" name="action" value="editMember">
 
             <div class="form-control w-full mb-3">
                 <label class="label"><span class="label-text">Username</span></label>
@@ -115,12 +115,12 @@ $data = select($conn,$sql);
             </div>
 
             <div class="form-control w-full mb-3">
-                <label class="label"><span class="label-text">ชื่อ (First Name)</span></label>
+                <label class="label"><span class="label-text">ชื่อ</span></label>
                 <input type="text" id="edit_fname" name="fname" class="input input-bordered w-full" required />
             </div>
 
             <div class="form-control w-full mb-4">
-                <label class="label"><span class="label-text">นามสกุล (Last Name)</span></label>
+                <label class="label"><span class="label-text">นามสกุล</span></label>
                 <input type="text" id="edit_lname" name="lname" class="input input-bordered w-full" required />
             </div>
 
@@ -144,7 +144,7 @@ $data = select($conn,$sql);
         
         <form id="deleteForm" action="../../API/admin/process.php" method="POST">
             <input type="hidden" id="delete_id" name="id">
-            <input type="hidden" id="delete_id" name="action" value="deleteMember">
+            <input type="hidden" id="" name="action" value="deleteMember">
 
             <div class="modal-action">
                 <!-- ส่ง Form ID 'deleteForm' เข้าไป -->
@@ -190,6 +190,7 @@ function openEditModal(id, fname, lname, user) {
 
 // 2. ฟังก์ชันเปิด Modal ลบ และใส่ ID ผู้ใช้
 function openDeleteModal(id) {
+    console.warn(id);
     document.getElementById('delete_id').value = id;
     document.getElementById('Modal_del').showModal();
 }

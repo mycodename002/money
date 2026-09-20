@@ -11,12 +11,12 @@ if(!($_SESSION['auth']['rule'] == 'admin')) {header(base_url('index.php')); exit
 
 
 $admin_group = $_SESSION['auth']['admin_group']; 
-$sql = "SELECT e.id, e.titel, e.details  FROM `group_admin_event` AS g JOIN `events` AS e ON g.id_event = e.id WHERE g.id_group_admin = $admin_group AND e.is_deleted = 0 AND e.is_success = 0 ;";
+$sql = "SELECT e.id, e.title, e.details  FROM `events` AS e  WHERE e.id_group_admin = $admin_group AND e.is_deleted = 0 AND e.is_success = 0 ;";
 
 $datas = select($conn,$sql);
 
 ?>
-<div class="container mx-auto px-4 mt-4">
+<div class="container mx-auto px-4 mt-4 shadow-md ">
     <ul class="list bg-base-100 rounded-box shadow-md">
   
   <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">รายการ ดำเนินการอยู่</li>
@@ -30,7 +30,7 @@ $datas = select($conn,$sql);
   foreach($datas  as $row){?>
   <li class="list-row" onclick="window.location.href='<?php echo base_url('VIEW/ADMIN/detail.php?id=').$row['id'] ?>'">
     <div>
-      <div><?php echo $row['titel'];?></div>
+      <div><?php echo $row['title'];?></div>
       <div class="text-xs uppercase font-semibold opacity-60"><?php echo $row['details']; ?></div>
     </div>
     <div class="badge badge-soft badge-success">ดำเนินการอยู่</div>
@@ -41,7 +41,7 @@ $datas = select($conn,$sql);
 
 
 <?php
-$datasuccess = select($conn,"SELECT e.id, e.titel, e.details  FROM `group_admin_event` AS g JOIN `events` AS e ON g.id_event = e.id WHERE g.id_group_admin = $admin_group AND e.is_deleted = 0 AND e.is_success = 1 ;");
+$datasuccess = select($conn,"SELECT e.id, e.title, e.details  FROM `events` AS e  WHERE e.id_group_admin = $admin_group AND e.is_deleted = 0 AND e.is_success = 1 ;");
 ?>
 <div class="container mx-auto px-4 mt-4">
     <ul class="list bg-base-100 rounded-box shadow-md">
@@ -57,7 +57,7 @@ $datasuccess = select($conn,"SELECT e.id, e.titel, e.details  FROM `group_admin_
   foreach($datasuccess  as $row){?>
   <li class="list-row" onclick="window.location.href='<?php echo base_url('VIEW/ADMIN/detail.php?id=').$row['id'] ?>'">
     <div>
-      <div><?php echo $row['titel'];?></div>
+      <div><?php echo $row['title'];?></div>
       <div class="text-xs uppercase font-semibold opacity-60"><?php echo $row['details']; ?></div>
     </div>
     <div class="badge badge-soft badge-error">ดำเนินการเสร็จสิ้น</div>

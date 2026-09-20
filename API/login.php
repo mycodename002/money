@@ -21,11 +21,18 @@ if (!password_verify($pass, $data['pass'])) {
     header("Location:".base_url('index.php'));
     exit();
 } 
+if(isset($_SESSION['addByURL'])){
+    queryExecute($conn,"INSERT INTO `mem_event`( `id_mem`, `id_event`) VALUES (:mem_id,:event_)",['mem_id'=>$data['id'],'event_'=>$_SESSION['addByURL']]);
+    unset($_SESSION['addByURL']);
+}
+
 $_SESSION['auth']['id'] = $data['id'];
 $_SESSION['auth']['fname'] = $data['fname'];
 
 $_SESSION['auth']['lname'] = $data['lname'];
 $_SESSION['auth']['rule'] = $data['rule'];
+
+
 if($data['rule'] == 'admin'){
     $_SESSION['auth']['admin_group'] = $data['admin_group'];
 
