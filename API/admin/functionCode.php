@@ -3,11 +3,6 @@ include_once "../../db.php";
 require_once "../functions.php";
 require_once "../auth.php";
 
-if(!($_SESSION['auth']['rule'] == 'admin')){
-    $_SESSION['alarm'] = "กลับไปเข้าสู่ระบบก่อน";
-    header(base_url('index.php'));
-    exit;
-}
 
 function deleteMember(){
     try {

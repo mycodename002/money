@@ -1,3 +1,4 @@
+<?php require_once '../../API/functions.php' ?>
 <body>
     <div class="navbar bg-base-100 shadow-sm">
         <div class="flex-1">
@@ -11,10 +12,18 @@
                         <details>
                             <summary>จัดการสมาชิก</summary>
                             <ul class="bg-base-100 rounded-t-none p-2">
+                                <?php if($_SESSION['auth']['rule'] == 'admin'){ ?>
                                 <!-- <li onclick="insert_user.showModal()"><a >เพิ่มสมาชิก</a></li> -->
                                 <li><a href="<?php echo base_url('/VIEW/ADMIN/showMember.php'); ?>">จัดการสมาชิก</a></li>
                                 <li><a href="<?php echo base_url('/VIEW/ADMIN/uploadSlip.php'); ?>">แนบสลิป</a></li>
                                 <li><a href="<?php echo base_url('/VIEW/ADMIN/showEvent.php'); ?>">จัดการรายการ</a></li>
+                                <?php } ?>
+                                <?php if($_SESSION['auth']['rule'] == 'user'){ ?>
+                                <!-- <li onclick="insert_user.showModal()"><a >เพิ่มสมาชิก</a></li> -->
+                                <li><a href="<?php echo base_url('/VIEW/ADMIN/showMember.php'); ?>">จัดการสมาชิก</a></li>
+                                <li><a href="<?php echo base_url('/VIEW/ADMIN/uploadSlip.php'); ?>">แนบสลิป</a></li>
+                                <li><a href="<?php echo base_url('/VIEW/ADMIN/showEvent.php'); ?>">จัดการรายการ</a></li>
+                                <?php } ?>
                             </ul>
                         </details>
                     </li>
