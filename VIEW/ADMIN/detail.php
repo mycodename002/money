@@ -160,16 +160,16 @@ $data_group = protectSelect($conn, "SELECT DISTINCT g.id, g.title FROM `base_gro
         <h3 class="font-bold text-xl text-primary mb-2">ลิ้งค์เชิญ</h3>
         
         <?php 
-        require_once '../../LIB/phpqrcode/qrlib.php';
+        // require_once '../../LIB/phpqrcode/qrlib.php';
 
-        $tempDir = './temp/';
-        if (!file_exists($tempDir)) {
-            mkdir($tempDir, 0775, true);
-        }
+        // $tempDir = './temp/';
+        // if (!file_exists($tempDir)) {
+        //     mkdir($tempDir, 0775, true);
+        // }
         $qrText = base_url('API/addmemberToevent.php?id=' . $id);
-        $filename = $tempDir . md5($qrText) . '.png';
-        QRcode::png($qrText, $filename, QR_ECLEVEL_L, 4, 2);
-        echo '<img src="' . $filename . '" alt="QR Code" class="mx-auto my-4">';
+        // $filename = $tempDir . md5($qrText) . '.png';
+        // QRcode::png($qrText, $filename, QR_ECLEVEL_L, 4, 2);
+        echo '<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . $qrText . '" alt="QR Code" class="mx-auto my-4">';
         ?>
         <p id="Link"><?php echo $qrText ?></p>
         <button class="btn btn-soft btn-primary btn-sm mt-4" type="button" onclick="copyToClipboard()" id = 'copyBtn'>คัดลอก</button>
