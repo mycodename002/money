@@ -16,10 +16,10 @@ $sql = "SELECT e.id, e.title, e.details  FROM `events` AS e  WHERE e.id_group_ad
 $datas = select($conn,$sql);
 
 ?>
-<div class="container mx-auto px-4 mt-4 shadow-md ">
+<div class="container mx-auto px-4 mt-4 ">
     <ul class="list bg-base-100 rounded-box shadow-md">
   
-  <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">รายการ ดำเนินการอยู่</li>
+  <li class="p-4 pb-2 text-ml opacity-60 tracking-wide">รายการ ดำเนินการอยู่</li>
   <?php 
   if(empty($datas)){
     echo '<li class="p-4 pb-2 text-xs opacity-60 tracking-wide">';
@@ -28,13 +28,14 @@ $datas = select($conn,$sql);
       // exit;
   }
   foreach($datas  as $row){?>
-  <li class="list-row" onclick="window.location.href='<?php echo base_url('VIEW/ADMIN/detail.php?id=').$row['id'] ?>'">
+  <li class="list-row flex items-center justify-between cursor-pointer" onclick="window.location.href='<?php echo base_url('VIEW/ADMIN/detail.php?id=').$row['id'] ?>'">
     <div>
-      <div><?php echo $row['title'];?></div>
-      <div class="text-xs uppercase font-semibold opacity-60"><?php echo $row['details']; ?></div>
+        <div><?php echo $row['title'];?></div>
+        <div class="text-xs uppercase font-semibold opacity-60"><?php echo $row['details']; ?></div>
     </div>
-    <div class="badge badge-soft badge-success">ดำเนินการอยู่</div>
-  </li>
+        <div class="badge badge-soft badge-success ml-auto">ดำเนินการอยู่</div>
+
+</li>
   <?php } ?>
 </ul>
 </div>
@@ -46,7 +47,7 @@ $datasuccess = select($conn,"SELECT e.id, e.title, e.details  FROM `events` AS e
 <div class="container mx-auto px-4 mt-4">
     <ul class="list bg-base-100 rounded-box shadow-md">
   
-  <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">รายการ ดำเนินการเสร็จสิ้น</li>
+  <li class="p-4 pb-2 text-ml opacity-60 tracking-wide">รายการ ดำเนินการเสร็จสิ้น</li>
   <?php 
   if(empty($datasuccess)){
     echo '<li class="p-4 pb-2 text-xs opacity-60 tracking-wide">';
@@ -55,12 +56,12 @@ $datasuccess = select($conn,"SELECT e.id, e.title, e.details  FROM `events` AS e
       // exit;
   }
   foreach($datasuccess  as $row){?>
-  <li class="list-row" onclick="window.location.href='<?php echo base_url('VIEW/ADMIN/detail.php?id=').$row['id'] ?>'">
-    <div>
-      <div><?php echo $row['title'];?></div>
-      <div class="text-xs uppercase font-semibold opacity-60"><?php echo $row['details']; ?></div>
-    </div>
-    <div class="badge badge-soft badge-error">ดำเนินการเสร็จสิ้น</div>
+  <li class="list-row flex items-center justify-between cursor-pointer" onclick="window.location.href='<?php echo base_url('VIEW/ADMIN/detail.php?id=').$row['id'] ?>'">
+      <div>
+          <div><?php echo $row['title'];?></div>
+          <div class="text-xs uppercase font-semibold opacity-60"><?php echo $row['details']; ?></div>
+      </div>
+      <div class="badge badge-soft badge-error ml-auto">ดำเนินการเสร็จสิ้น</div>
   </li>
   <?php } ?>
 </ul>

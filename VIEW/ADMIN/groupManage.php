@@ -12,6 +12,11 @@ if(!isset($_SESSION['auth']['rule']) || $_SESSION['auth']['rule'] != 'admin') {
 
 <?php $data_group = protectSelect($conn, "SELECT DISTINCT * FROM `group_mem`  WHERE is_deleted = 0 AND id_group_admin = :ad_id;", ["ad_id"=>$_SESSION['auth']['admin_group']], 1)  ?>
 <div class="overflow-x-auto">
+    
+    <a onclick="window.history.back();" class="btn btn-sm btn-ghost gap-1 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                    ย้อนกลับ
+                </a>
     <h2 class="text-xl font-bold mb-4">กลุ่ม</h2>
         <button class = "btn btn-soft btn-primary" onclick="Modal_add_group.showModal()">เพิ่มกลุ่ม</button>
 

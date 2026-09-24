@@ -323,6 +323,24 @@ function eventSuccess(){
             backPage();
             exit;
         }
+        $checkData = protectSelect($conn, "
+SELECT 
+    COUNT(DISTINCT m.id) AS total_members,
+    COUNT(DISTINCT CASE WHEN s.status = 'ผ่าน' THEN m.id END) AS passed_members,
+    ROUND(
+        (COUNT(DISTINCT CASE WHEN s.status = 'ผ่าน' THEN m.id END) * 100.0) 
+        / NULLIF(COUNT(DISTINCT m.id), 0), 
+        2
+    ) AS pass_percentage
+FROM `mem_event` AS e 
+JOIN `members` AS m ON e.id_mem = m.id 
+LEFT JOIN `slips` AS s ON m.id = s.add_by AND s.id_event = e.id_event
+WHERE e.id_event = :event_id AND m.is_deleted = 0;",['event_id'=> $event_id],0);
+        if($checkData['pass_percentage'] != 100){
+            $_SESSION["alarm"] = "ยังมีบางคนยังไม่แนบสลิป";
+            backPage();
+            exit;
+        }
         queryExecute($conn,"UPDATE `events` SET  `is_success` = 1 WHERE id_group_admin = :id_group AND id = :event_id;",[
             'event_id'=> $event_id,
             'id_group' => $_SESSION['auth']['admin_group']
@@ -364,7 +382,7 @@ function update_slip_status() {
 function upload_slip_by_admin(){
     global $conn;
     $id_event =$_POST['id_event'] ;
-    $add_by   =$_POST['add_by'];   // ID สมาชิกที่แอดมินแนบแทน
+    $add_by   =$_POST['add_by'];  
     $status   =$_POST['status'];
 
     if (empty($id_event) || empty($add_by)) {$_SESSION['alarm'] = "ข้อมูลไม่ถูกต้อง";
@@ -372,37 +390,28 @@ function upload_slip_by_admin(){
         exit;
     }
 
-    // 1. เรียกใช้ฟังก์ชันอัปโหลดรูปภาพ
     $uploadResult = uploadSlipImage($_FILES['slip_file'] ?? null, $id_event,$add_by);
 
-    // 2. ตรวจสอบผลลัพธ์การอัปโหลด
     if ($uploadResult['status'] === false) {
         $_SESSION['alarm'] =$uploadResult['message'];
         backPage();
         exit;
     }
 
-    // 3. เมื่ออัปโหลดสำเร็จ ได้ชื่อไฟล์ใหม่มา
     $newFileName =$uploadResult['filename'];
 
     try {
-        // 4. ตรวจสอบว่าเคยมีข้อมูลสลิปเดิมอยู่แล้วหรือไม่
         $checkSql = "SELECT `id`, `file_name` FROM `slips` WHERE `id_event` = :id_event AND `add_by` = :add_by LIMIT 1";
         // $existingSlip = queryExecute($conn,$checkSql, ['id_event' => $id_event, 'add_by' =>$add_by])->fetch();
         $existingSlip = protectSelect($conn,$checkSql, ['id_event' => $id_event, 'add_by' =>$add_by],0);
         $uploadDir = '/../../STORAGES/IMG/';
 
         if (!empty($existingSlip)) {
-            // === มีข้อมูลเดิมอยู่แล้ว -> ให้ UPDATE ===
-
-            // ลบไฟล์รูปภาพเก่าออกจาก Server (ถ้ามีอยู่จริง)
             if (!empty($existingSlip['file_name'])) {$oldFilePath = $uploadDir .$existingSlip['file_name'];
                 if (file_exists($oldFilePath)) {
                     @unlink($oldFilePath);
                 }
             }
-
-            // อัปเดตข้อมูลไฟล์และสถานะ
             $updateSql = "UPDATE `slips` 
                           SET `file_name` = :file_name, 
                               `status`    = :status_ 
@@ -417,8 +426,6 @@ function upload_slip_by_admin(){
             queryExecute($conn,$updateSql, $params);$_SESSION['notify'] = "อัปเดตสลิปและสถานะสำเร็จ";
 
         } else {
-            // === ยังไม่มีข้อมูล -> ให้ INSERT ใหม่ ===
-            
             $insertSql = "INSERT INTO `slips` (
                             `file_name`, 
                             `id_event`, 

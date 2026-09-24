@@ -48,105 +48,144 @@ $data = protectSelect($conn,$sql,['id_event'=>$id],1);
 $data_event = protectSelect($conn,"SELECT title, details FROM `events` WHERE id = :id_event;",["id_event"=>$id],0);
 $data_group = protectSelect($conn, "SELECT DISTINCT g.id, g.title FROM `base_group_member` AS b JOIN `group_mem` AS g ON b.id_name_group = g.id WHERE g.id_group_admin = :ad_id;", ["ad_id"=>$ad_id], 1);
 ?>
+<?php $data_percen = protectSelect($conn, "
+SELECT 
+    COUNT(DISTINCT m.id) AS total_members,
+    COUNT(DISTINCT CASE WHEN s.status = 'ผ่าน' THEN m.id END) AS passed_members,
+    ROUND(
+        (COUNT(DISTINCT CASE WHEN s.status = 'ผ่าน' THEN m.id END) * 100.0) 
+        / NULLIF(COUNT(DISTINCT m.id), 0), 
+        2
+    ) AS pass_percentage
+FROM `mem_event` AS e 
+JOIN `members` AS m ON e.id_mem = m.id 
+LEFT JOIN `slips` AS s ON m.id = s.add_by AND s.id_event = e.id_event
+WHERE e.id_event = :event_id AND m.is_deleted = 0;",['event_id'=> $id],0); ?>
 
 <!-- ========================================== -->
 <!-- 1. MAIN CONTENT / TABLE                    -->
 <!-- ========================================== -->
-<div class="container mx-auto p-4 mt-4 shadow-md ">
+<div class="container mx-auto p-6 mt-6 bg-base-100 rounded-2xl shadow-xl border border-base-200">
+   
+                <a onclick="window.history.back();" class="btn btn-sm btn-ghost gap-1 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                    ย้อนกลับ
+                </a>
+                
     <div class="overflow-x-auto">
-        <h2 class="text-xl font-bold mb-4">รายชื่อผู้ใช้ใน <?php echo htmlspecialchars($data_event['title'] ?? '') ?> </h2>
-        <p><?php echo htmlspecialchars($data_event['details'] ?? '') ?></p>
-        <div class="my-4 space-x-2">
-            <button class="btn btn-soft btn-primary" onclick="Modal_add_member.showModal()">เพิ่มสมาชิก</button>
-            <button class="btn btn-soft btn-primary" onclick="Modal_link.showModal()">ลิงค์เชิญ</button>
-            <button class="btn btn-soft btn-success" onclick="Modal_eventSuccess.showModal()">รายการเสร็จสิ้น</button>
+        <!-- Header Section -->
+        <div class="mb-6 pb-4 border-b border-base-200">
+            <h2 class="text-2xl font-bold tracking-tight text-base-content mb-2">รายชื่อผู้ใช้ใน <?php echo $data_event['title'] ?? '' ?> </h2>
+            <p class="text-sm text-base-content/70 leading-relaxed"><?php echo $data_event['details'] ?? '' ?></p>
         </div>
 
-        <table class="table w-full">
-            <thead>
-                <tr>
-                    <th>ลำดับ</th>
-                    <th>ชื่อ</th>
-                    <th>นามสกุล</th>
-                    <th>สลิป</th>
-                    <th>สถานะ</th>
-                    <th>จัดการสมาชิก</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php 
-            $count =$start + 1;
-            foreach ($data as $value) {$badge = 'badge-success'; 
-                if (empty($value['status'])) {$badge = 'badge-error';
-                } else if ($value['status'] == 'ไม่ผ่าน') {
-                    $badge = 'badge-error';
-                } else if ($value['status'] == 'รอตรวจสอบ') {
-                    $badge = 'badge-warning';
-                } 
-            ?>
-                <tr>
-                    <th><?php echo $count++; ?></th>
-                    <td><?php echo htmlspecialchars($value['fname']); ?></td>
-                    <td><?php echo htmlspecialchars($value['lname']); ?></td>
-                    <td>
-                        <button onclick='openSlipModal(<?= json_encode($value, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)' 
-                                class="btn btn-soft btn-primary btn-sm <?php echo empty($value['file_name']) ? 'btn-disabled' : ''; ?>">
-                            สลิป
-                        </button>
-                    </td>
-                    <td>
-                        <div class="badge badge-soft badge-sm <?php echo $badge; ?>">
-                            <?php echo empty($value['status']) ? 'ยังไม่ได้แนบสลิป' : htmlspecialchars($value['status']); ?>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flex items-center gap-1">
-                            <button type="button" 
-                                    class="btn btn-sm btn-outline btn-primary"
-                                    onclick="openAdminUploadSlipModal(<?= $value['id'] ?>, '<?= htmlspecialchars($value['fname'] . ' ' .$value['lname'], ENT_QUOTES) ?>')">
-                                แนบสลิปแทน
-                            </button>
-                            
-                            <button onclick="openDeleteModal('<?php echo $value['id']; ?>','<?php echo$id; ?>')" 
-                                    class="btn btn-soft btn-error btn-sm">
-                                ลบ
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            <?php } ?>
-            </tbody>
-        </table>
+        <!-- Action Buttons & Stats Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6 items-center bg-base-200/50 p-4 rounded-xl">
+            <div class="flex flex-wrap gap-2 ">
+                <button class="btn btn-soft btn-primary" onclick="Modal_add_member.showModal()">เพิ่มสมาชิก</button>
+                <button class="btn btn-soft btn-primary" onclick="Modal_link.showModal()">ลิงค์เชิญ</button>
+                <button class="btn btn-soft btn-success" onclick="Modal_eventSuccess.showModal()">รายการเสร็จสิ้น</button>
+            </div>
+            
+            <div class="flex items-center ">
+                <div class="space-y-1 text-sm font-medium">
+                    <p class="text-base-content/80"><?php  echo "จำนวนผู้ร่วม ". $data_percen['total_members'] ?></p>
+                    <p class="text-base-content/80"><?php  echo "จำนวนผู้ผ่าน ". $data_percen['passed_members'] . ' คน  คิดเป็น '.$data_percen['pass_percentage']." %"?></p>
+                </div>
+                <div class="radial-progress text-primary font-bold shadow-inner" style="--value:<?php echo $data_percen['pass_percentage'] ?>;" aria-valuenow="<?php echo $data_percen['pass_percentage'] ?>" role="progressbar"><?php echo $data_percen['pass_percentage']." %"; ?></div>
+            </div>
+        </div>
 
-        <!-- Pagination -->
-        <div class="join mt-4">
-            <?php 
-            $count_btn = (int)ceil($count_max / 25);$range = 2;
-            $start_page = max(1, $page -$range);
-            $end_page   = min($count_btn, $page +$range);
-
-            if ($page > 3) { ?>
-                <button class="join-item btn" onclick="window.location.href = '<?php echo base_url('VIEW/ADMIN/detail.php?id='.$id.'&page=1'); ?>'">1</button>
-                <?php if ($page > 4) { ?>
-                    <button class="join-item btn">...</button>
-                <?php } ?>
-            <?php }
-
-            for ($i =$start_page; $i <=$end_page; $i++) {$active_class = ($i ==$page) ? 'btn-active' : ''; 
+        <!-- Table Section -->
+        <div class="overflow-x-auto rounded-xl border border-base-200 shadow-sm">
+            <table class="table w-full align-middle">
+                <thead class="text-sm">
+                    <tr>
+                        <th class="w-16 text-center">ลำดับ</th>
+                        <th>ชื่อ</th>
+                        <th>นามสกุล</th>
+                        <th class="text-center">สลิป</th>
+                        <th class="text-center">สถานะ</th>
+                        <th class="text-center">จัดการสมาชิก</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-base-200">
+                <?php 
+                $count =$start + 1;
+                foreach ($data as $value) {$badge = 'badge-success'; 
+                    if (empty($value['status'])) {$badge = 'badge-error';
+                    } else if ($value['status'] == 'ไม่ผ่าน') {
+                        $badge = 'badge-error';
+                    } else if ($value['status'] == 'รอตรวจสอบ') {
+                        $badge = 'badge-warning';
+                    } 
                 ?>
-                <button class="join-item btn <?php echo $active_class; ?>" onclick="window.location.href = '<?php echo base_url('VIEW/ADMIN/detail.php?id='.$id.'&page='.$i); ?>'">
-                    <?php echo $i; ?>
-                </button>
-            <?php }
-
-            if ($page < $count_btn -$range) { ?>
-                <?php if ($page < $count_btn -$range - 1) { ?>
-                    <button class="join-item btn">...</button>
+                    <tr class="hover:bg-base-200/30 transition-colors">
+                        <th class="text-center font-medium opacity-70"><?php echo $count++; ?></th>
+                        <td class="font-medium"><?php echo htmlspecialchars($value['fname']); ?></td>
+                        <td class="font-medium"><?php echo htmlspecialchars($value['lname']); ?></td>
+                        <td class="text-center">
+                            <button onclick='openSlipModal(<?= json_encode($value, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)' 
+                                    class="btn btn-soft btn-primary btn-sm <?php echo empty($value['file_name']) ? 'btn-disabled' : ''; ?>">
+                                สลิป
+                            </button>
+                        </td>
+                        <td class="text-center">
+                            <div class="badge badge-soft badge-sm <?php echo $badge; ?>">
+                                <?php echo empty($value['status']) ? 'ยังไม่ได้แนบสลิป' : htmlspecialchars($value['status']); ?>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline btn-primary"
+                                        onclick="openAdminUploadSlipModal(<?= $value['id'] ?>, '<?= htmlspecialchars($value['fname'] . ' ' .$value['lname'], ENT_QUOTES) ?>')">
+                                    แนบสลิปแทน
+                                </button>
+                                
+                                <button onclick="openDeleteModal('<?php echo $value['id']; ?>','<?php echo$id; ?>')" 
+                                        class="btn btn-soft btn-error btn-sm">
+                                    ลบ
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
                 <?php } ?>
-                <button class="join-item btn" onclick="window.location.href = '<?php echo base_url('VIEW/ADMIN/detail.php?id='.$id.'&page='.$count_btn); ?>'">
-                    <?php echo $count_btn; ?>
-                </button>
-            <?php } ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Section -->
+        <div class="flex justify-center md:justify-end mt-6">
+            <div class="join shadow-sm border border-base-200 rounded-lg overflow-hidden">
+                <?php 
+                $count_btn = (int)ceil($count_max / 25);$range = 2;
+                $start_page = max(1, $page -$range);
+                $end_page   = min($count_btn, $page +$range);
+
+                if ($page > 3) { ?>
+                    <button class="join-item btn btn-sm md:btn-md" onclick="window.location.href = '<?php echo base_url('VIEW/ADMIN/detail.php?id='.$id.'&page=1'); ?>'">1</button>
+                    <?php if ($page > 4) { ?>
+                        <button class="join-item btn btn-sm md:btn-md btn-disabled">...</button>
+                    <?php } ?>
+                <?php }
+
+                for ($i =$start_page; $i <=$end_page; $i++) {$active_class = ($i ==$page) ? 'btn-active' : ''; 
+                    ?>
+                    <button class="join-item btn btn-sm md:btn-md <?php echo $active_class; ?>" onclick="window.location.href = '<?php echo base_url('VIEW/ADMIN/detail.php?id='.$id.'&page='.$i); ?>'">
+                        <?php echo $i; ?>
+                    </button>
+                <?php }
+
+                if ($page < $count_btn -$range) { ?>
+                    <?php if ($page < $count_btn -$range - 1) { ?>
+                        <button class="join-item btn btn-sm md:btn-md btn-disabled">...</button>
+                    <?php } ?>
+                    <button class="join-item btn btn-sm md:btn-md" onclick="window.location.href = '<?php echo base_url('VIEW/ADMIN/detail.php?id='.$id.'&page='.$count_btn); ?>'">
+                        <?php echo $count_btn; ?>
+                    </button>
+                <?php } ?>
+            </div>
         </div>
     </div>
 </div>
@@ -160,15 +199,7 @@ $data_group = protectSelect($conn, "SELECT DISTINCT g.id, g.title FROM `base_gro
         <h3 class="font-bold text-xl text-primary mb-2">ลิ้งค์เชิญ</h3>
         
         <?php 
-        // require_once '../../LIB/phpqrcode/qrlib.php';
-
-        // $tempDir = './temp/';
-        // if (!file_exists($tempDir)) {
-        //     mkdir($tempDir, 0775, true);
-        // }
         $qrText = base_url('API/addmemberToevent.php?id=' . $id);
-        // $filename = $tempDir . md5($qrText) . '.png';
-        // QRcode::png($qrText, $filename, QR_ECLEVEL_L, 4, 2);
         echo '<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . $qrText . '" alt="QR Code" class="mx-auto my-4">';
         ?>
         <p id="Link"><?php echo $qrText ?></p>

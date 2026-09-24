@@ -2,6 +2,7 @@
 <?php require_once "../TEMPLATES/user/nav_user.php"; ?>
 <?php include_once "../../db.php"; ?>
 <?php require_once "../../API/auth.php"; 
+require_once "../../API/alarmAndNotify.php";
 
 if (!isset($_SESSION['auth']['rule']) || $_SESSION['auth']['rule'] !== 'user') {
     header('Location: ' . base_url('index.php')); 
@@ -67,6 +68,7 @@ $slipData = protectSelect($conn, "SELECT * FROM `slips` WHERE add_by = :id_mem A
             <form action="<?= base_url('API/user/process.php') ?>" method="POST" enctype="multipart/form-data" class="space-y-4">
                 <input type="hidden" name="id_event" value="<?= htmlspecialchars($id) ?>">
                 <input type="hidden" name="action" value="upload_slip">
+                <input type="hidden" name="add_by" value="<?php echo  $_SESSION['auth']['id']; ?>">
 
                 <!-- จำนวนเงิน -->
             

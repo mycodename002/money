@@ -26,6 +26,10 @@ $data = select($conn,$sql);
 ?>
 
 <div class="container mx-auto px-4 mt-4 shadow-md ">
+    <a onclick="window.history.back();" class="btn btn-sm btn-ghost gap-1 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                    ย้อนกลับ
+                </a>
     <div class="overflow-x-auto">
         <h2 class="text-xl font-bold mb-4">รายการ</h2>
         <button class = "btn btn-soft btn-primary" onclick="Modal_addEvent.showModal()">เพิ่มสมาชิก</button>
@@ -62,7 +66,7 @@ $data = select($conn,$sql);
             </tbody>
         </table>
         <!-- Pagination -->
-        <div class="join mt-4">
+        <div class="join mt-4 flex justify-center md:justify-end mt-6">
             <?php 
             $count_btn = (int)ceil($count_max / 25); 
             $range = 2;

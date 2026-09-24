@@ -34,6 +34,13 @@ if(isset($_SESSION['addByURL'])){
     }
     unset($_SESSION['addByURL']);
 }
+if(isset($_SESSION['addByGURL'])){
+    $check = protectSelect($conn,"SELECT id FROM `base_group_member` WHERE `id_mem` = :mem_id AND `id_name_group` = :id_name_group",['mem_id'=>$_SESSION['auth']['id'],'id_name_group'=>$_SESSION['addByGURL']],0);
+    if(empty($check)){
+        queryExecute($conn,"INSERT INTO `base_group_member`( `id_mem`, `id_name_group`) VALUES (:mem_id,:id_name_group)",['mem_id'=>$_SESSION['auth']['id'],'id_name_group'=>$_SESSION['addByGURL']]);
+    }
+    unset($_SESSION['addByGURL']);
+}
 
 
 if($data['rule'] == 'admin'){
