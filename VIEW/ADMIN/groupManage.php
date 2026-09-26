@@ -59,8 +59,7 @@ if(!isset($_SESSION['auth']['rule']) || $_SESSION['auth']['rule'] != 'admin') {
         <h3 class="font-bold text-lg text-primary mb-4">เพิ่มกลุ่ม</h3>
         <p class="py-2">จัดการรายชื่อให้เป็นกลุ่มและรายชื่อที่ใช้บ่อย</p>
         
-        <form id="deleteForm" action="../../API/admin/process.php" method="POST">
-            <input type="hidden" id="delete_id" name="id">
+        <form id="ADD_GROUP__" action="../../API/admin/process.php" method="POST">
             <input type="hidden" id="" name="action" value="addGroupMember">
             <div class="form-control w-full mb-3">
                 <label class="label"><span class="label-text">ชื่อกลุ่ม</span></label>
@@ -72,7 +71,7 @@ if(!isset($_SESSION['auth']['rule']) || $_SESSION['auth']['rule'] != 'admin') {
             </div>
             <div class="modal-action">
                 <!-- ส่ง Form ID 'deleteForm' เข้าไป -->
-                <button type="button" class="btn btn-soft btn-primary" onclick="openConfirmModal('deleteForm')">เพิ่มกลุ่ม</button>
+                <button type="button" class="btn btn-soft btn-primary" onclick="openConfirmModal('ADD_GROUP__')">เพิ่มกลุ่ม</button>
                 <button type="button" class="btn" onclick="document.getElementById('Modal_add_group').close()">ยกเลิก</button>
             </div>
         </form>

@@ -1,3 +1,4 @@
+<?php require_once "./API/functions.php"; ?>
 <!DOCTYPE html>
 <html lang="th" data-theme="light">
 <head>

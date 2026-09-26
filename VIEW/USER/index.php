@@ -1,7 +1,12 @@
 <?php require_once "../TEMPLATES/user/head_user.php"; ?>
 <?php require_once "../TEMPLATES/user/nav_user.php"; ?>
 <?php include_once "../../db.php"; ?>
-<?php require_once "../../API/auth.php"; ?>
+<?php require_once "../../API/auth.php"; 
+if (!isset($_SESSION['auth']['rule']) || $_SESSION['auth']['rule'] !== 'user') {
+    header('Location: ' . base_url('index.php')); 
+    exit();
+}
+?>
 
 <?php 
 $sql = "SELECT

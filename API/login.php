@@ -55,7 +55,7 @@ if($data['rule'] == 'user'){
 }
 
 if($data['rule'] == 'support'){
-    header("Location:".base_url('debugAndTest/genpass.php'));
+    header("Location:".base_url('/VIEW/SUPPORT'));
     exit();
 }
 

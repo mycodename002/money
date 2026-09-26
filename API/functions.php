@@ -3,12 +3,19 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
 // รันบนพอร์ตไหนก็มาแก้ด้วยเด้อ
 define('BASE_URL', 'http://localhost:8000/');
 
 function base_url($path = '') {
     return BASE_URL . ltrim($path, '/');
 }
+
+if (PHP_VERSION_ID < 80000) { 
+    header('location:' . base_url('errorphpversion.php')); 
+    exit;
+}
+
 function select($conn,$sql)  {
     $query = "$sql";
     $stmt = $conn->prepare($query);

@@ -3,7 +3,7 @@ include_once './functionCode.php';
 
 if(!($_SESSION['auth']['rule'] == 'user')){
     $_SESSION['alarm'] = "กลับไปเข้าสู่ระบบก่อน";
-    header(base_url('index.php'));
+    header('location:' .base_url('index.php'));
     exit;
 }
 

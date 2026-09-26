@@ -133,6 +133,8 @@ $data = select($conn,$sql);
                 <input type="text" id="edit_lname" name="lname" class="input input-bordered w-full focus:input-primary rounded-lg" required />
             </div>
 
+            
+
             <div class="modal-action pt-4 border-t border-base-200">
                 <button type="button" class="btn btn-soft btn-success" onclick="openConfirmModal('editForm')">บันทึกการแก้ไข</button>
                 <button type="button" class="btn btn-ghost" onclick="document.getElementById('Modal_edit').close()">ยกเลิก</button>
@@ -199,13 +201,14 @@ function openEditModal(id, fname, lname, user) {
 }
 
 function openDeleteModal(id) {
-    console.warn(id);
+    // console.warn(id);
     document.getElementById('delete_id').value = id;
     document.getElementById('Modal_del').showModal();
 }
 
 function openConfirmModal(formId) {
     currentFormId = formId; 
+    console.warn(currentFormId);
     const form = document.getElementById(currentFormId);
     
     if (!form.checkValidity()) {
@@ -223,4 +226,3 @@ function submitEditForm() {
 }
 </script>
 
-<?php require_once "./modal.php"; ?>

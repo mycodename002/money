@@ -36,7 +36,6 @@ $sql = 'SELECT
     s.status, 
     s.file_name, 
     s.date, 
-    s.amount,
     s.id AS slip_id
 FROM `mem_event` AS e 
 JOIN `members` AS m ON e.id_mem = m.id 
@@ -85,6 +84,8 @@ WHERE e.id_event = :event_id AND m.is_deleted = 0;",['event_id'=> $id],0); ?>
                 <button class="btn btn-soft btn-primary" onclick="Modal_add_member.showModal()">เพิ่มสมาชิก</button>
                 <button class="btn btn-soft btn-primary" onclick="Modal_link.showModal()">ลิงค์เชิญ</button>
                 <button class="btn btn-soft btn-success" onclick="Modal_eventSuccess.showModal()">รายการเสร็จสิ้น</button>
+                <!-- <button class="btn btn-soft btn-success" onclick="Modal_eventSuccess.showModal()">รายการเสร็จสิ้น</button> -->
+                 <a class="btn btn-soft btn-info" href="<?php echo base_url("/API/export.php?id=".$id) ?>">ดาวน์โหลด</a>
             </div>
             
             <div class="flex items-center ">
@@ -143,7 +144,7 @@ WHERE e.id_event = :event_id AND m.is_deleted = 0;",['event_id'=> $id],0); ?>
                                     แนบสลิปแทน
                                 </button>
                                 
-                                <button onclick="openDeleteModal('<?php echo $value['id']; ?>','<?php echo$id; ?>')" 
+                                <button onclick="openDeleteModal('<?php echo $value['id']; ?>','<?php echo $id; ?>')" 
                                         class="btn btn-soft btn-error btn-sm">
                                     ลบ
                                 </button>

@@ -8,6 +8,7 @@ function deleteMember(){
     try {
         global $conn;
         $id = $_POST['id'];
+        echo $id;
         if(empty($id)){
             // print_r($_POST['id']);
             // echo $id;
