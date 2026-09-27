@@ -4,10 +4,6 @@
 <?php require_once "../../API/auth.php"; 
 require_once "../../API/alarmAndNotify.php";
 
-if (!isset($_SESSION['auth']['rule']) || $_SESSION['auth']['rule'] !== 'user') {
-    header('Location: ' . base_url('index.php')); 
-    exit();
-}
 
 ?>
 <div class="container mx-auto px-4 my-8 max-w-md">

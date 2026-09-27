@@ -200,4 +200,4 @@ function submitEditForm() {
 </script>
 
 
-<?php require_once "./modal.php"; ?>
+<?php //require_once "./modal.php"; ?>

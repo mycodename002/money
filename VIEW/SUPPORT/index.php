@@ -106,7 +106,7 @@ $groups = select($conn,$sql);
                 <?php foreach ($groups as$g): ?>
                     <div class="p-3 bg-base-200 rounded-lg flex justify-between items-center">
                         <div class="truncate mr-2">
-                            <p class="font-semibold text-sm truncate"><?= htmlspecialchars($g['name'] ?? 'ไม่มีชื่อกลุ่ม') ?></p>
+                            <p class="font-semibold text-sm truncate"><?= htmlspecialchars($g['title'] ?? 'ไม่มีชื่อกลุ่ม') ?></p>
                             <p class="text-xs text-gray-500 truncate"><?= htmlspecialchars($g['details'] ?? '-') ?></p>
                         </div>
                         <a href="<?= base_url('VIEW/SUPPORT/') ?>ShowGroup.php?id=<?= $g['id'] ?>" class="btn btn-xs btn-accent">ดูข้อมูล</a>

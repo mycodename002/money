@@ -48,12 +48,13 @@ function insertUser(){
         $fname = $_POST['fname'];
         $lname = $_POST['lname'];
         $user = $_POST['user'];
-        if(empty($fname) || empty($lname) || empty($user)){
+        $rule = $_POST['rule'];
+        if(empty($fname) || empty($lname) || empty($user)|| empty($rule)){
             $_SESSION["alarm"] = "กรุณากรอกข้อมูลใหม่ให้ครบถ้วน";
         }
         $admin_g = $_SESSION['auth']['admin_group'];
         $pass = password_hash("123",PASSWORD_BCRYPT);
-        insert($conn,"INSERT INTO `members`( `fname`, `lname`, `user`, `pass`, `rule`, `admin_group`) VALUES ('$fname','$lname','$user','$pass','user', '$admin_g')");
+        insert($conn,"INSERT INTO `members`( `fname`, `lname`, `user`, `pass`, `rule`, `admin_group`) VALUES ('$fname','$lname','$user','$pass','$rule', '$admin_g')");
         $_SESSION['notify'] = "เพิ่มสมาชิกสำเร็จ";
     } catch (Throwable $th) {
         $_SESSION["alarm"] = "มีชื่อผู้ใช้นี้อยู่แล้ว";
@@ -431,13 +432,11 @@ function upload_slip_by_admin(){
                             `file_name`, 
                             `id_event`, 
                             `add_by`, 
-                            `type`, 
                             `status`
                         ) VALUES (
                             :file_name, 
                             :id_event, 
                             :add_by, 
-                            'รายรับ', 
                             :status_
                         )";
 

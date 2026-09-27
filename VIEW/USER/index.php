@@ -28,7 +28,7 @@ $data_event = protectSelect($conn, $sql, ['id' =>$_SESSION['auth']['id']], 1) ?:
     <div class="bg-base-100 p-6 rounded-2xl shadow-xl border border-base-200">
         <!-- Header -->
         <div class="pb-4 mb-6 border-b border-base-200">
-            <h2 class="text-2xl font-bold tracking-tight text-base-content">รายการกิจกรรมของคุณ</h2>
+            <h2 class="text-2xl font-bold tracking-tight text-base-content">รายการกิจกรรมของคุณ <?php echo $_SESSION['auth']['fname'] . "  " . $_SESSION['auth']['lname'] ?></h2>
             <p class="text-sm text-base-content/60">ตรวจสอบสถานะการแนบสลิปชำระเงินและรายละเอียดกิจกรรม</p>
         </div>
 

@@ -55,13 +55,11 @@ function upload_slip(){
                             `file_name`, 
                             `id_event`, 
                             `add_by`, 
-                            `type`, 
                             `status`
                         ) VALUES (
                             :file_name, 
                             :id_event, 
                             :add_by, 
-                            'รายรับ', 
                             :status_
                         )";
 
@@ -72,7 +70,8 @@ function upload_slip(){
                 'status_'   => "รอตรวจสอบ"
             ];
 
-            queryExecute($conn,$insertSql, $params);$_SESSION['notify'] = "อัปโหลดและแนบสลิปแทนสมาชิกสำเร็จ";
+            queryExecute($conn,$insertSql, $params);
+            $_SESSION['notify'] = "อัปโหลดและแนบสลิปแทนสมาชิกสำเร็จ";
         }
 
     } catch (\Throwable $th) {

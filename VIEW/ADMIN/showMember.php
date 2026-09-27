@@ -107,6 +107,8 @@ $data = select($conn,$sql);
     </div>
 </div>
 
+
+
 <dialog id="Modal_edit" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box rounded-2xl shadow-2xl border border-base-200 p-6">
         <h3 class="font-bold text-xl text-base-content mb-4 flex items-center gap-2">
@@ -226,3 +228,5 @@ function submitEditForm() {
 }
 </script>
 
+
+<?php require_once "./modal.php"; ?>
