@@ -21,7 +21,7 @@ function deleteMember(){
             backPage();
             exit;
         }
-        update($conn,"UPDATE `members` SET `is_deleted` = 1 WHERE id = :id;",['id'=>$id]);
+        queryExecute($conn,"DELETE FROM `members` WHERE id = :id;",['id'=>$id]);
         $_SESSION['notify'] = "ลบข้อมูลสามชิกสำเร็จ";
     } catch (Throwable $th) {
         $_SESSION["alarm"] = "เกิดข้อผิดพลาดผิดพลาด";
@@ -77,7 +77,7 @@ function deleteEvent(){
             backPage();
             exit;
         }
-        update($conn,"UPDATE `events` SET `is_deleted` = 1 WHERE id = :id;",['id'=>$id]);
+        update($conn,"DELETE FROM `events` WHERE id = :id;",['id'=>$id]);
         $_SESSION['notify'] = "ลบข้อมูลกิจกรรมสำเร็จ";
     } catch (Throwable $th) {
         $_SESSION["alarm"] = "เกิดข้อผิดพลาดผิดพลาด";
@@ -113,7 +113,7 @@ function deleteGroup(){
             backPage();
             exit;
         }
-        update($conn,"UPDATE `group_mem` SET `is_deleted` = 1 WHERE id = :id;",['id'=>$id]);
+        update($conn,"DELETE FROM `group_mem` WHERE id = :id;",['id'=>$id]);
         $_SESSION['notify'] = "ลบข้อมูลกลุ่มสำเร็จ";
     } catch (Throwable $th) {
         $_SESSION["alarm"] = "เกิดข้อผิดพลาดผิดพลาด";

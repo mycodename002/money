@@ -21,7 +21,7 @@ $count_max = $count_max[0]['C'];
 $start = ($page-1)*25;
 
 // เพิ่มการดึงฟิลด์ user มาด้วยเพื่อนำไปแสดงใน Modal แก้ไข
-$sql = "SELECT e.id, e.title, e.details  FROM `events` AS e WHERE e.id_group_admin = $admin_group AND e.is_deleted = 0 AND e.is_success = 0 LIMIT $start,25;";
+$sql = "SELECT e.id, e.title, e.details  FROM `events` AS e WHERE e.id_group_admin = $admin_group AND e.is_deleted = 0  LIMIT $start,25;";
 $data = select($conn,$sql);
 ?>
 
@@ -32,7 +32,7 @@ $data = select($conn,$sql);
                 </a>
     <div class="overflow-x-auto">
         <h2 class="text-xl font-bold mb-4">รายการ</h2>
-        <button class = "btn btn-soft btn-primary" onclick="Modal_addEvent.showModal()">เพิ่มสมาชิก</button>
+        <button class = "btn btn-soft btn-primary" onclick="Modal_addEvent.showModal()">เพิ่มรายการ</button>
         <table class="table w-full">
             <!-- head -->
             <thead>
